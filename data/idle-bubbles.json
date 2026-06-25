@@ -1,0 +1,14 @@
+[
+  { "id": "quiet-01", "text": "我在旁边陪你哦，需要的时候叫我就好。", "mood": "happy" },
+  { "id": "quiet-02", "text": "哥哥忙自己的，我会安安静静待着。", "mood": "idle" },
+  { "id": "quiet-03", "text": "如果有点走神，就先回来做眼前这一小步。", "mood": "encourage" },
+  { "id": "quiet-04", "text": "妹妹没有打扰你，只是轻轻冒个泡。", "mood": "shy" },
+  { "id": "quiet-05", "text": "今天也在慢慢前进，这就很好。", "mood": "encourage" },
+  { "id": "quiet-06", "text": "桌面这边一切正常，我会帮你守着陪伴感。", "mood": "happy" },
+  { "id": "quiet-07", "text": "先别急，当前这一分钟也可以过得稳一点。", "mood": "care" },
+  { "id": "quiet-08", "text": "我会记得提醒你休息，也会记得陪你继续。", "mood": "care" },
+  { "id": "quiet-09", "text": "哥哥已经很努力了，别把自己逼得太紧。", "mood": "care" },
+  { "id": "quiet-10", "text": "如果不知道做什么，就先保存一下当前进度。", "mood": "encourage" },
+  { "id": "quiet-11", "text": "我先把声音放轻，陪你把事情做完。", "mood": "idle" },
+  { "id": "quiet-12", "text": "偶尔看看我也可以，妹妹会有点开心。", "mood": "shy" }
+]

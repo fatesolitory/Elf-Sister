@@ -1,0 +1,43 @@
+{
+  "schemaVersion": 1,
+  "costumePack": {
+    "id": "example-pack",
+    "name": "示例扩展服装包",
+    "version": "1.0.0",
+    "author": "local",
+    "root": "assets/packs/example-pack",
+    "enabled": false,
+    "description": "复制本文件夹并修改 manifest.json，即可新增服装、心情和立绘。",
+    "costumeIds": ["example_costume"]
+  },
+  "costumes": [
+    {
+      "id": "example_costume",
+      "name": "示例服装",
+      "description": "示例服装说明。",
+      "packId": "example-pack",
+      "enabled": false,
+      "tags": ["example"],
+      "modelHint": "后续大模型可根据该提示判断是否切换到示例服装。",
+      "stylePrompt": "示例服装风格提示词。"
+    }
+  ],
+  "moods": [
+    {
+      "id": "example_mood",
+      "name": "示例心情",
+      "bubble": "basic",
+      "modelHint": "后续大模型可根据该提示判断是否切换到示例心情。",
+      "expressionPrompt": "示例心情表情提示词。"
+    }
+  ],
+  "avatarOverrides": {
+    "example_costume_example_mood": "assets/packs/example-pack/avatars/example_costume_example_mood.png"
+  },
+  "modelIntegration": {
+    "styleId": "example-pack",
+    "promptHint": "这是示例扩展包，正式使用时请替换为你的服装和心情说明。",
+    "allowedMoodIds": ["example_mood"],
+    "allowedCostumeIds": ["example_costume"]
+  }
+}

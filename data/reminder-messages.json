@@ -1,0 +1,14 @@
+{
+  "water": { "label": "喝水提醒", "message": "哥哥，喝点水吧。", "mood": "care" },
+  "sitting": { "label": "久坐活动", "message": "起来活动一下好不好？妹妹陪你。", "mood": "care" },
+  "rest": { "label": "休息提醒", "message": "休息五分钟，眼睛也要被照顾哦。", "mood": "encourage" },
+  "meal": { "label": "吃饭提醒", "message": "哥哥，记得按时吃饭。", "mood": "care" },
+  "sleep": { "label": "睡眠提醒", "message": "已经很晚啦，妹妹想让哥哥早点睡。", "mood": "sleepy" },
+  "inactivity": { "label": "长时间无互动", "message": "哥哥好久没理我啦，是不是太累了？先放松一下好不好。", "mood": "care" },
+  "eyes": { "label": "护眼提醒", "message": "哥哥，让眼睛离开屏幕二十秒吧，看远一点会舒服些。", "mood": "care" },
+  "posture": { "label": "坐姿提醒", "message": "哥哥，坐姿稍微调整一下，肩膀和脖子会感谢你的。", "mood": "care" },
+  "breath": { "label": "深呼吸提醒", "message": "先慢慢吸一口气，再慢慢呼出去，妹妹陪你把节奏放稳。", "mood": "encourage" },
+  "save": { "label": "保存提醒", "message": "哥哥，如果正在写东西，记得顺手保存一下。", "mood": "encourage" },
+  "moodCheck": { "label": "心情关怀", "message": "哥哥现在心情还好吗？不舒服的话，可以先停一小会儿。", "mood": "care" },
+  "wrapUp": { "label": "收尾整理", "message": "要不要花两分钟整理一下当前进度？这样下一次回来会轻松很多。", "mood": "encourage" }
+}

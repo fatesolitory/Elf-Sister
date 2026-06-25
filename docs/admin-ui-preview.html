@@ -1,0 +1,1039 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>桌面陪伴精灵后台 UI 样式预览</title>
+  <style>
+    :root {
+      color-scheme: light;
+      --bg: #f6f3ef;
+      --panel: #fffdf9;
+      --panel-soft: #fbf7f1;
+      --line: #e4d9cf;
+      --line-strong: #cbb9aa;
+      --text: #2e2a27;
+      --muted: #776c64;
+      --subtle: #9b8f84;
+      --brand: #7c5cff;
+      --brand-strong: #5d45cf;
+      --mint: #3b8f73;
+      --amber: #ad6a18;
+      --red: #b14545;
+      --blue: #326ea8;
+      --shadow: 0 18px 50px rgba(53, 45, 38, 0.10);
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      min-width: 1180px;
+      min-height: 100vh;
+      font-family: "Microsoft YaHei", "Segoe UI", Arial, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      letter-spacing: 0;
+    }
+
+    button,
+    input,
+    select,
+    textarea {
+      font: inherit;
+    }
+
+    button {
+      border: 0;
+      cursor: pointer;
+    }
+
+    .app {
+      min-height: 100vh;
+      display: grid;
+      grid-template-columns: 248px minmax(0, 1fr);
+    }
+
+    .sidebar {
+      padding: 20px 16px;
+      border-right: 1px solid var(--line);
+      background: #fffaf4;
+      display: flex;
+      flex-direction: column;
+      gap: 18px;
+    }
+
+    .brand {
+      display: grid;
+      grid-template-columns: 46px 1fr;
+      gap: 12px;
+      align-items: center;
+      padding: 8px 8px 14px;
+      border-bottom: 1px solid var(--line);
+    }
+
+    .brand img {
+      width: 46px;
+      height: 46px;
+      border-radius: 8px;
+      object-fit: cover;
+      background: #fff;
+      border: 1px solid var(--line);
+    }
+
+    .brand strong {
+      display: block;
+      font-size: 18px;
+      line-height: 1.2;
+    }
+
+    .brand span {
+      display: block;
+      margin-top: 4px;
+      color: var(--muted);
+      font-size: 12px;
+    }
+
+    .nav {
+      display: grid;
+      gap: 6px;
+    }
+
+    .nav button {
+      width: 100%;
+      height: 42px;
+      padding: 0 12px;
+      border-radius: 8px;
+      background: transparent;
+      color: #514941;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      text-align: left;
+    }
+
+    .nav button span:first-child {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .nav button.active {
+      background: #ebe4ff;
+      color: var(--brand-strong);
+      font-weight: 700;
+    }
+
+    .nav small {
+      min-width: 22px;
+      height: 20px;
+      padding: 0 7px;
+      display: inline-grid;
+      place-items: center;
+      border-radius: 999px;
+      background: #fff;
+      color: var(--subtle);
+      border: 1px solid var(--line);
+      font-size: 11px;
+    }
+
+    .side-card {
+      margin-top: auto;
+      border: 1px solid var(--line);
+      background: var(--panel);
+      border-radius: 8px;
+      padding: 12px;
+      display: grid;
+      gap: 10px;
+    }
+
+    .side-card strong {
+      font-size: 14px;
+    }
+
+    .side-card p {
+      margin: 0;
+      color: var(--muted);
+      font-size: 12px;
+      line-height: 1.5;
+    }
+
+    .main {
+      min-width: 0;
+      display: grid;
+      grid-template-rows: auto 1fr;
+    }
+
+    .topbar {
+      min-height: 78px;
+      padding: 16px 24px;
+      border-bottom: 1px solid var(--line);
+      background: rgba(255, 253, 249, 0.86);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 18px;
+    }
+
+    .title h1 {
+      margin: 0;
+      font-size: 24px;
+      line-height: 1.2;
+    }
+
+    .title p {
+      margin: 6px 0 0;
+      color: var(--muted);
+      font-size: 13px;
+    }
+
+    .actions {
+      display: flex;
+      gap: 10px;
+      align-items: center;
+      flex-wrap: wrap;
+      justify-content: flex-end;
+    }
+
+    .btn {
+      min-height: 38px;
+      padding: 0 14px;
+      border-radius: 8px;
+      border: 1px solid var(--line-strong);
+      color: #463d36;
+      background: #fff;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      white-space: nowrap;
+    }
+
+    .btn.primary {
+      border-color: var(--brand);
+      background: var(--brand);
+      color: #fff;
+    }
+
+    .btn.green {
+      border-color: #a9d2c2;
+      background: #eefaf5;
+      color: var(--mint);
+    }
+
+    .btn.warn {
+      border-color: #e3c08a;
+      background: #fff8e8;
+      color: var(--amber);
+    }
+
+    .btn.danger {
+      border-color: #dda6a6;
+      background: #fff1f1;
+      color: var(--red);
+    }
+
+    .content {
+      padding: 22px 24px 32px;
+      overflow: auto;
+    }
+
+    .dashboard {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) 340px;
+      gap: 18px;
+      align-items: start;
+    }
+
+    .left-stack,
+    .right-stack {
+      display: grid;
+      gap: 18px;
+    }
+
+    .hero-panel,
+    .panel {
+      border: 1px solid var(--line);
+      background: var(--panel);
+      border-radius: 8px;
+      box-shadow: var(--shadow);
+    }
+
+    .hero-panel {
+      padding: 18px;
+      display: grid;
+      grid-template-columns: 240px minmax(0, 1fr);
+      gap: 20px;
+      align-items: center;
+    }
+
+    .avatar-preview {
+      min-height: 318px;
+      border-radius: 8px;
+      border: 1px solid var(--line);
+      background: #f9f5ef;
+      display: grid;
+      place-items: center;
+      overflow: hidden;
+    }
+
+    .avatar-preview img {
+      width: 100%;
+      height: 318px;
+      object-fit: contain;
+      filter: drop-shadow(0 16px 26px rgba(48, 39, 34, 0.18));
+    }
+
+    .hero-copy {
+      min-width: 0;
+    }
+
+    .status-row {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+      margin-bottom: 14px;
+    }
+
+    .pill {
+      min-height: 28px;
+      padding: 0 10px;
+      border-radius: 999px;
+      border: 1px solid var(--line);
+      background: var(--panel-soft);
+      color: var(--muted);
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 12px;
+    }
+
+    .pill.ok {
+      color: var(--mint);
+      background: #effaf4;
+      border-color: #b9d8c9;
+    }
+
+    .pill.warn {
+      color: var(--amber);
+      background: #fff8e8;
+      border-color: #e3c08a;
+    }
+
+    .hero-copy h2 {
+      margin: 0 0 10px;
+      font-size: 26px;
+    }
+
+    .hero-copy p {
+      margin: 0;
+      color: var(--muted);
+      line-height: 1.7;
+    }
+
+    .quick-grid {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: 10px;
+      margin-top: 18px;
+    }
+
+    .quick-card {
+      min-height: 96px;
+      border: 1px solid var(--line);
+      background: var(--panel-soft);
+      border-radius: 8px;
+      padding: 12px;
+      display: grid;
+      gap: 8px;
+      align-content: start;
+    }
+
+    .quick-card strong {
+      font-size: 15px;
+    }
+
+    .quick-card span {
+      color: var(--muted);
+      font-size: 12px;
+      line-height: 1.45;
+    }
+
+    .panel-head {
+      min-height: 54px;
+      padding: 14px 16px;
+      border-bottom: 1px solid var(--line);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+    }
+
+    .panel-head h3 {
+      margin: 0;
+      font-size: 17px;
+    }
+
+    .panel-head span {
+      color: var(--muted);
+      font-size: 12px;
+    }
+
+    .panel-body {
+      padding: 16px;
+    }
+
+    .form-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 12px;
+    }
+
+    .field {
+      display: grid;
+      gap: 7px;
+    }
+
+    .field label {
+      color: var(--muted);
+      font-size: 13px;
+    }
+
+    .field input,
+    .field select,
+    .field textarea {
+      width: 100%;
+      min-height: 38px;
+      border: 1px solid var(--line-strong);
+      background: #fff;
+      color: var(--text);
+      border-radius: 8px;
+      padding: 8px 10px;
+      outline: none;
+    }
+
+    .field textarea {
+      min-height: 116px;
+      resize: vertical;
+      line-height: 1.6;
+    }
+
+    .field.wide {
+      grid-column: 1 / -1;
+    }
+
+    .switch-list {
+      display: grid;
+      gap: 10px;
+    }
+
+    .size-control {
+      border: 1px solid var(--line);
+      background: var(--panel-soft);
+      border-radius: 8px;
+      padding: 12px;
+      display: grid;
+      gap: 10px;
+    }
+
+    .size-control header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+    }
+
+    .size-control strong {
+      display: block;
+      margin-bottom: 4px;
+    }
+
+    .size-control span {
+      color: var(--muted);
+      font-size: 12px;
+    }
+
+    .size-value {
+      min-width: 58px;
+      height: 30px;
+      border-radius: 8px;
+      border: 1px solid var(--line-strong);
+      background: #fff;
+      display: inline-grid;
+      place-items: center;
+      color: var(--brand-strong);
+      font-weight: 700;
+    }
+
+    .size-slider {
+      display: grid;
+      grid-template-columns: 44px minmax(0, 1fr) 44px;
+      align-items: center;
+      gap: 10px;
+      color: var(--muted);
+      font-size: 12px;
+    }
+
+    .size-slider input {
+      width: 100%;
+      accent-color: var(--brand);
+    }
+
+    .size-actions {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 8px;
+    }
+
+    .switch-row,
+    .health-row,
+    .memory-row {
+      min-height: 54px;
+      border: 1px solid var(--line);
+      background: var(--panel-soft);
+      border-radius: 8px;
+      padding: 10px 12px;
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) auto;
+      gap: 12px;
+      align-items: center;
+    }
+
+    .switch-row strong,
+    .health-row strong,
+    .memory-row strong {
+      display: block;
+      margin-bottom: 4px;
+    }
+
+    .switch-row span,
+    .health-row span,
+    .memory-row span {
+      color: var(--muted);
+      font-size: 12px;
+    }
+
+    .toggle {
+      width: 48px;
+      height: 26px;
+      padding: 3px;
+      border-radius: 999px;
+      background: #d7ccc2;
+      display: flex;
+      justify-content: flex-start;
+    }
+
+    .toggle.on {
+      background: var(--brand);
+      justify-content: flex-end;
+    }
+
+    .toggle i {
+      width: 20px;
+      height: 20px;
+      border-radius: 50%;
+      background: #fff;
+      box-shadow: 0 2px 6px rgba(0, 0, 0, 0.18);
+    }
+
+    .tabs {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+      margin-bottom: 14px;
+    }
+
+    .tabs button {
+      height: 34px;
+      padding: 0 12px;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: #fff;
+      color: var(--muted);
+    }
+
+    .tabs button.active {
+      border-color: var(--brand);
+      color: var(--brand-strong);
+      background: #f1edff;
+      font-weight: 700;
+    }
+
+    .asset-grid {
+      display: grid;
+      grid-template-columns: repeat(5, minmax(0, 1fr));
+      gap: 10px;
+    }
+
+    .asset-tile {
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: var(--panel-soft);
+      overflow: hidden;
+    }
+
+    .asset-tile img {
+      width: 100%;
+      height: 120px;
+      object-fit: contain;
+      display: block;
+      background: #f5efe7;
+    }
+
+    .asset-tile div {
+      padding: 9px;
+      display: grid;
+      gap: 4px;
+    }
+
+    .asset-tile strong {
+      font-size: 13px;
+    }
+
+    .asset-tile span {
+      color: var(--muted);
+      font-size: 12px;
+    }
+
+    .table {
+      display: grid;
+      gap: 8px;
+    }
+
+    .table-row {
+      min-height: 44px;
+      display: grid;
+      grid-template-columns: 120px 1fr 120px 110px;
+      gap: 12px;
+      align-items: center;
+      padding: 8px 10px;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: var(--panel-soft);
+      font-size: 13px;
+    }
+
+    .table-row.header {
+      background: #ede8df;
+      color: var(--muted);
+      font-weight: 700;
+    }
+
+    .health-row {
+      grid-template-columns: minmax(0, 1fr) 72px;
+    }
+
+    .state {
+      height: 26px;
+      padding: 0 9px;
+      border-radius: 999px;
+      display: inline-grid;
+      place-items: center;
+      font-size: 12px;
+      border: 1px solid var(--line);
+      background: #fff;
+    }
+
+    .state.ok {
+      color: var(--mint);
+      border-color: #a9d2c2;
+      background: #effaf4;
+    }
+
+    .state.warn {
+      color: var(--amber);
+      border-color: #e3c08a;
+      background: #fff8e8;
+    }
+
+    .state.error {
+      color: var(--red);
+      border-color: #dda6a6;
+      background: #fff1f1;
+    }
+
+    .model-test {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) auto auto;
+      gap: 10px;
+      margin-top: 14px;
+    }
+
+    .model-test input {
+      min-width: 0;
+    }
+
+    .diary-card {
+      display: grid;
+      grid-template-columns: 118px minmax(0, 1fr);
+      gap: 14px;
+      align-items: center;
+    }
+
+    .diary-card img {
+      width: 118px;
+      height: 118px;
+      object-fit: contain;
+    }
+
+    .memory-list {
+      display: grid;
+      gap: 10px;
+      margin-top: 14px;
+    }
+
+    .danger-zone {
+      border-color: #ddb1a4;
+      background: #fff7f4;
+    }
+
+    .footer-note {
+      margin-top: 18px;
+      color: var(--muted);
+      font-size: 12px;
+      line-height: 1.6;
+    }
+  </style>
+</head>
+<body>
+  <div class="app">
+    <aside class="sidebar">
+      <div class="brand">
+        <img src="../assets/icons/elf-sister-q-icon.png" alt="桌面陪伴精灵图标" />
+        <div>
+          <strong>桌面陪伴精灵</strong>
+          <span>后台控制台样式预览</span>
+        </div>
+      </div>
+
+      <nav class="nav" aria-label="后台导航">
+        <button class="active"><span>总览面板</span><small>1</small></button>
+        <button><span>角色人格</span><small>2</small></button>
+        <button><span>素材状态</span><small>3</small></button>
+        <button><span>扩展接口</span><small>4</small></button>
+        <button><span>陪伴提醒</span><small>5</small></button>
+        <button><span>日记记忆</span><small>6</small></button>
+        <button><span>健康检查</span><small>7</small></button>
+        <button><span>桌面行为</span><small>8</small></button>
+        <button><span>模型接口</span><small>9</small></button>
+        <button><span>系统维护</span><small>10</small></button>
+      </nav>
+
+      <div class="side-card">
+        <strong>设计原则</strong>
+        <p>左侧负责功能分区，顶部放全局动作，中间为主配置，右侧放状态、预览和高频操作。</p>
+      </div>
+    </aside>
+
+    <main class="main">
+      <header class="topbar">
+        <div class="title">
+          <h1>后台控制台</h1>
+          <p>用于后续 Electron 后台界面的布局、按钮和功能位置参考。</p>
+        </div>
+        <div class="actions">
+          <button class="btn">刷新数据</button>
+          <button class="btn green">运行健康检查</button>
+          <button class="btn warn">测试模型</button>
+          <button class="btn primary">保存全部设置</button>
+        </div>
+      </header>
+
+      <section class="content">
+        <div class="dashboard">
+          <div class="left-stack">
+            <section class="hero-panel">
+              <div class="avatar-preview">
+                <img src="../assets/avatars/generated/home_idle.png" alt="当前形象预览" />
+              </div>
+              <div class="hero-copy">
+                <div class="status-row">
+                  <span class="pill ok">素材完整</span>
+                  <span class="pill ok">本地回复可用</span>
+                  <span class="pill warn">模型未启用</span>
+                  <span class="pill">当前服装：居家</span>
+                </div>
+                <h2>功能优先的后台布局</h2>
+                <p>总览区域先展示精灵形象、运行状态和核心动作，让用户一进后台就能知道当前是否正常、素材是否完整、模型是否可用，以及下一步该按哪个中文按钮。</p>
+
+                <div class="quick-grid">
+                  <div class="quick-card">
+                    <strong>60 个形象</strong>
+                    <span>10 套服装 × 6 种心情</span>
+                  </div>
+                  <div class="quick-card">
+                    <strong>10 个气泡</strong>
+                    <span>聊天、提醒、系统提示分场景使用</span>
+                  </div>
+                  <div class="quick-card">
+                    <strong>12 条提醒</strong>
+                    <span>喝水、休息、眼睛、坐姿等</span>
+                  </div>
+                  <div class="quick-card">
+                    <strong>本地记忆</strong>
+                    <span>关键点记录和往期查询</span>
+                  </div>
+                </div>
+              </div>
+            </section>
+
+            <section class="panel">
+              <div class="panel-head">
+                <div>
+                  <h3>角色人格</h3>
+                  <span>控制系统提示词、称呼方式和聊天语气</span>
+                </div>
+                <div class="actions">
+                  <button class="btn">重新读取人格</button>
+                  <button class="btn primary">保存人格设置</button>
+                </div>
+              </div>
+              <div class="panel-body">
+                <div class="form-grid">
+                  <div class="field">
+                    <label>角色名称</label>
+                    <input value="妹妹" />
+                  </div>
+                  <div class="field">
+                    <label>默认称呼</label>
+                    <input value="哥哥" />
+                  </div>
+                  <div class="field wide">
+                    <label>人格摘要</label>
+                    <textarea>温柔、主动、陪伴感强，能够提醒工作休息，也能在用户疲惫时给予关心和鼓励。</textarea>
+                  </div>
+                </div>
+              </div>
+            </section>
+
+            <section class="panel">
+              <div class="panel-head">
+                <div>
+                  <h3>素材状态</h3>
+                  <span>后续后台按这个位置管理服装、心情、气泡和素材检查</span>
+                </div>
+                <div class="actions">
+                  <button class="btn">扫描素材</button>
+                  <button class="btn">打开素材目录</button>
+                </div>
+              </div>
+              <div class="panel-body">
+                <div class="tabs">
+                  <button class="active">服装</button>
+                  <button>心情</button>
+                  <button>气泡</button>
+                  <button>预留扩展</button>
+                </div>
+                <div class="asset-grid">
+                  <article class="asset-tile">
+                    <img src="../assets/avatars/generated/home_happy.png" alt="居家开心" />
+                    <div><strong>居家休闲</strong><span>已启用</span></div>
+                  </article>
+                  <article class="asset-tile">
+                    <img src="../assets/avatars/generated/office_idle.png" alt="通勤待机" />
+                    <div><strong>日常通勤</strong><span>已启用</span></div>
+                  </article>
+                  <article class="asset-tile">
+                    <img src="../assets/avatars/generated/street_idle.png" alt="街头待机" />
+                    <div><strong>休闲街头</strong><span>已启用</span></div>
+                  </article>
+                  <article class="asset-tile">
+                    <img src="../assets/avatars/generated/fitness_idle.png" alt="健身待机" />
+                    <div><strong>运动健身</strong><span>已启用</span></div>
+                  </article>
+                  <article class="asset-tile">
+                    <img src="../assets/avatars/generated/qipao_idle_v3.png" alt="旗袍待机" />
+                    <div><strong>东方旗袍</strong><span>已启用</span></div>
+                  </article>
+                </div>
+              </div>
+            </section>
+
+            <section class="panel">
+              <div class="panel-head">
+                <div>
+                  <h3>陪伴提醒</h3>
+                  <span>提醒开关、周期、文案和心情统一管理</span>
+                </div>
+                <button class="btn primary">保存提醒配置</button>
+              </div>
+              <div class="panel-body">
+                <div class="table">
+                  <div class="table-row header">
+                    <span>提醒类型</span><span>提醒文案</span><span>周期</span><span>操作</span>
+                  </div>
+                  <div class="table-row">
+                    <strong>喝水提醒</strong><span>哥哥，喝点水吧。</span><span>60 分钟</span><button class="btn">编辑</button>
+                  </div>
+                  <div class="table-row">
+                    <strong>眼睛休息</strong><span>让眼睛离开屏幕二十秒。</span><span>40 分钟</span><button class="btn">编辑</button>
+                  </div>
+                  <div class="table-row">
+                    <strong>坐姿提醒</strong><span>坐姿稍微调整一下。</span><span>50 分钟</span><button class="btn">编辑</button>
+                  </div>
+                </div>
+              </div>
+            </section>
+
+            <section class="panel">
+              <div class="panel-head">
+                <div>
+                  <h3>模型接口</h3>
+                  <span>兼容 OpenAI、Ollama、LM Studio 和自定义网关</span>
+                </div>
+                <div class="actions">
+                  <button class="btn">应用链接</button>
+                  <button class="btn warn">连接测试</button>
+                  <button class="btn primary">保存模型配置</button>
+                </div>
+              </div>
+              <div class="panel-body">
+                <div class="form-grid">
+                  <div class="field">
+                    <label>提供商</label>
+                    <select>
+                      <option>本地模拟回复</option>
+                      <option>OpenAI 兼容接口</option>
+                      <option>Ollama 本地模型</option>
+                      <option>LM Studio 本地模型</option>
+                    </select>
+                  </div>
+                  <div class="field">
+                    <label>模型名称</label>
+                    <input placeholder="例如 qwen2.5:7b" />
+                  </div>
+                  <div class="field wide">
+                    <label>标准端点</label>
+                    <input placeholder="http://127.0.0.1:11434/v1/chat/completions" />
+                  </div>
+                </div>
+                <div class="model-test">
+                  <input class="field input" placeholder="输入一句测试消息" value="哥哥今天有点累" />
+                  <button class="btn">测试回复</button>
+                  <button class="btn green">保存密钥</button>
+                </div>
+              </div>
+            </section>
+          </div>
+
+          <aside class="right-stack">
+            <section class="panel">
+              <div class="panel-head">
+                <div>
+                  <h3>运行状态</h3>
+                  <span>后台右侧固定状态区</span>
+                </div>
+                <span class="state ok">正常</span>
+              </div>
+              <div class="panel-body switch-list">
+                <div class="health-row">
+                  <div><strong>JSON 配置</strong><span>全部可以正常解析</span></div>
+                  <span class="state ok">正常</span>
+                </div>
+                <div class="health-row">
+                  <div><strong>素材引用</strong><span>所有当前引用都存在</span></div>
+                  <span class="state ok">正常</span>
+                </div>
+                <div class="health-row">
+                  <div><strong>模型接口</strong><span>当前使用本地回复</span></div>
+                  <span class="state warn">注意</span>
+                </div>
+              </div>
+            </section>
+
+            <section class="panel">
+              <div class="panel-head">
+                <div>
+                  <h3>桌面行为</h3>
+                  <span>高频控制和形象大小放右侧</span>
+                </div>
+              </div>
+              <div class="panel-body switch-list">
+                <div class="size-control">
+                  <header>
+                    <div>
+                      <strong>调整大小</strong>
+                      <span>控制桌宠形象、气泡和输入区整体比例</span>
+                    </div>
+                    <div class="size-value">100%</div>
+                  </header>
+                  <div class="size-slider">
+                    <span>45%</span>
+                    <input type="range" min="45" max="180" value="100" />
+                    <span>180%</span>
+                  </div>
+                  <div class="size-actions">
+                    <button class="btn">减小</button>
+                    <button class="btn">增大</button>
+                    <button class="btn">恢复默认</button>
+                  </div>
+                </div>
+                <div class="switch-row">
+                  <div><strong>窗口置顶</strong><span>保持桌宠在屏幕前方</span></div>
+                  <button class="toggle on" aria-label="窗口置顶"><i></i></button>
+                </div>
+                <div class="switch-row">
+                  <div><strong>锁定位置</strong><span>防止误拖动</span></div>
+                  <button class="toggle" aria-label="锁定位置"><i></i></button>
+                </div>
+                <div class="switch-row">
+                  <div><strong>开机自启动</strong><span>随系统启动</span></div>
+                  <button class="toggle" aria-label="开机自启动"><i></i></button>
+                </div>
+                <div class="actions">
+                  <button class="btn">显示精灵</button>
+                  <button class="btn">隐藏精灵</button>
+                  <button class="btn">应用大小</button>
+                </div>
+              </div>
+            </section>
+
+            <section class="panel">
+              <div class="panel-head">
+                <div>
+                  <h3>日记记忆</h3>
+                  <span>关键点记录入口</span>
+                </div>
+                <button class="btn">刷新</button>
+              </div>
+              <div class="panel-body">
+                <div class="diary-card">
+                  <img src="../assets/notebook/diary-open.png" alt="日记本" />
+                  <div>
+                    <strong>当前关键点：0 条</strong>
+                    <p class="footer-note">聊天中触发“记住、关键点、日记”等关键词后写入，也可在这里手动记录。</p>
+                  </div>
+                </div>
+                <div class="memory-list">
+                  <div class="memory-row">
+                    <div><strong>手动记录</strong><span>写入一个新的关键点</span></div>
+                    <button class="btn">记录</button>
+                  </div>
+                </div>
+              </div>
+            </section>
+
+            <section class="panel danger-zone">
+              <div class="panel-head">
+                <div>
+                  <h3>系统维护</h3>
+                  <span>危险操作集中在底部</span>
+                </div>
+              </div>
+              <div class="panel-body switch-list">
+                <button class="btn">导出配置</button>
+                <button class="btn warn">清理本地记录</button>
+                <button class="btn danger">恢复出厂设置</button>
+              </div>
+            </section>
+          </aside>
+        </div>
+
+        <p class="footer-note">说明：这是静态 UI 样式预览页，不连接真实后台逻辑。后续重构 Electron 后台时，可按此布局映射为 React 组件、共享 CSS 变量和中文按钮文案。</p>
+      </section>
+    </main>
+  </div>
+</body>
+</html>

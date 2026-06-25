@@ -1,0 +1,386 @@
+[
+  {
+    "group": "chroma",
+    "file": "fitness_care.png",
+    "relativePath": "assets/avatars/green-source-archive/chroma/fitness_care.png",
+    "bytes": 1461089
+  },
+  {
+    "group": "chroma",
+    "file": "fitness_encourage.png",
+    "relativePath": "assets/avatars/green-source-archive/chroma/fitness_encourage.png",
+    "bytes": 1576063
+  },
+  {
+    "group": "chroma",
+    "file": "fitness_happy.png",
+    "relativePath": "assets/avatars/green-source-archive/chroma/fitness_happy.png",
+    "bytes": 1461728
+  },
+  {
+    "group": "chroma",
+    "file": "fitness_idle.png",
+    "relativePath": "assets/avatars/green-source-archive/chroma/fitness_idle.png",
+    "bytes": 1435755
+  },
+  {
+    "group": "chroma",
+    "file": "fitness_shy.png",
+    "relativePath": "assets/avatars/green-source-archive/chroma/fitness_shy.png",
+    "bytes": 1474439
+  },
+  {
+    "group": "chroma",
+    "file": "fitness_sleepy.png",
+    "relativePath": "assets/avatars/green-source-archive/chroma/fitness_sleepy.png",
+    "bytes": 1407412
+  },
+  {
+    "group": "chroma",
+    "file": "home_care.png",
+    "relativePath": "assets/avatars/green-source-archive/chroma/home_care.png",
+    "bytes": 1528694
+  },
+  {
+    "group": "chroma",
+    "file": "home_encourage.png",
+    "relativePath": "assets/avatars/green-source-archive/chroma/home_encourage.png",
+    "bytes": 1690353
+  },
+  {
+    "group": "chroma",
+    "file": "home_happy.png",
+    "relativePath": "assets/avatars/green-source-archive/chroma/home_happy.png",
+    "bytes": 1531158
+  },
+  {
+    "group": "chroma",
+    "file": "home_idle.png",
+    "relativePath": "assets/avatars/green-source-archive/chroma/home_idle.png",
+    "bytes": 1510184
+  },
+  {
+    "group": "chroma",
+    "file": "home_shy.png",
+    "relativePath": "assets/avatars/green-source-archive/chroma/home_shy.png",
+    "bytes": 1441160
+  },
+  {
+    "group": "chroma",
+    "file": "home_sleepy.png",
+    "relativePath": "assets/avatars/green-source-archive/chroma/home_sleepy.png",
+    "bytes": 1475029
+  },
+  {
+    "group": "chroma",
+    "file": "office_care.png",
+    "relativePath": "assets/avatars/green-source-archive/chroma/office_care.png",
+    "bytes": 1432915
+  },
+  {
+    "group": "chroma",
+    "file": "office_encourage.png",
+    "relativePath": "assets/avatars/green-source-archive/chroma/office_encourage.png",
+    "bytes": 1431756
+  },
+  {
+    "group": "chroma",
+    "file": "office_happy.png",
+    "relativePath": "assets/avatars/green-source-archive/chroma/office_happy.png",
+    "bytes": 1433018
+  },
+  {
+    "group": "chroma",
+    "file": "office_idle.png",
+    "relativePath": "assets/avatars/green-source-archive/chroma/office_idle.png",
+    "bytes": 1386129
+  },
+  {
+    "group": "chroma",
+    "file": "office_shy.png",
+    "relativePath": "assets/avatars/green-source-archive/chroma/office_shy.png",
+    "bytes": 1411631
+  },
+  {
+    "group": "chroma",
+    "file": "office_sleepy.png",
+    "relativePath": "assets/avatars/green-source-archive/chroma/office_sleepy.png",
+    "bytes": 1415580
+  },
+  {
+    "group": "chroma",
+    "file": "qipao_happy.png",
+    "relativePath": "assets/avatars/green-source-archive/chroma/qipao_happy.png",
+    "bytes": 1647815
+  },
+  {
+    "group": "chroma",
+    "file": "qipao_idle.png",
+    "relativePath": "assets/avatars/green-source-archive/chroma/qipao_idle.png",
+    "bytes": 1541915
+  },
+  {
+    "group": "chroma",
+    "file": "street_care.png",
+    "relativePath": "assets/avatars/green-source-archive/chroma/street_care.png",
+    "bytes": 1442906
+  },
+  {
+    "group": "chroma",
+    "file": "street_encourage.png",
+    "relativePath": "assets/avatars/green-source-archive/chroma/street_encourage.png",
+    "bytes": 1571314
+  },
+  {
+    "group": "chroma",
+    "file": "street_happy.png",
+    "relativePath": "assets/avatars/green-source-archive/chroma/street_happy.png",
+    "bytes": 1459031
+  },
+  {
+    "group": "chroma",
+    "file": "street_idle.png",
+    "relativePath": "assets/avatars/green-source-archive/chroma/street_idle.png",
+    "bytes": 1444246
+  },
+  {
+    "group": "chroma",
+    "file": "street_shy.png",
+    "relativePath": "assets/avatars/green-source-archive/chroma/street_shy.png",
+    "bytes": 1418236
+  },
+  {
+    "group": "chroma",
+    "file": "street_sleepy.png",
+    "relativePath": "assets/avatars/green-source-archive/chroma/street_sleepy.png",
+    "bytes": 1463547
+  },
+  {
+    "group": "work",
+    "file": "academy_care.green.20260611.png",
+    "relativePath": "assets/avatars/green-source-archive/work/academy_care.green.20260611.png",
+    "bytes": 1362134
+  },
+  {
+    "group": "work",
+    "file": "academy_encourage.green.20260611.png",
+    "relativePath": "assets/avatars/green-source-archive/work/academy_encourage.green.20260611.png",
+    "bytes": 1370735
+  },
+  {
+    "group": "work",
+    "file": "academy_happy.green.20260611.png",
+    "relativePath": "assets/avatars/green-source-archive/work/academy_happy.green.20260611.png",
+    "bytes": 1317289
+  },
+  {
+    "group": "work",
+    "file": "academy_idle.green.20260611.png",
+    "relativePath": "assets/avatars/green-source-archive/work/academy_idle.green.20260611.png",
+    "bytes": 1360883
+  },
+  {
+    "group": "work",
+    "file": "academy_shy.green.20260611.png",
+    "relativePath": "assets/avatars/green-source-archive/work/academy_shy.green.20260611.png",
+    "bytes": 1303176
+  },
+  {
+    "group": "work",
+    "file": "academy_sleepy.green.20260611.png",
+    "relativePath": "assets/avatars/green-source-archive/work/academy_sleepy.green.20260611.png",
+    "bytes": 1371818
+  },
+  {
+    "group": "work",
+    "file": "assistant_care.green.20260611.png",
+    "relativePath": "assets/avatars/green-source-archive/work/assistant_care.green.20260611.png",
+    "bytes": 1363205
+  },
+  {
+    "group": "work",
+    "file": "assistant_encourage.green.20260611.png",
+    "relativePath": "assets/avatars/green-source-archive/work/assistant_encourage.green.20260611.png",
+    "bytes": 1355885
+  },
+  {
+    "group": "work",
+    "file": "assistant_happy.green.20260611.png",
+    "relativePath": "assets/avatars/green-source-archive/work/assistant_happy.green.20260611.png",
+    "bytes": 1351020
+  },
+  {
+    "group": "work",
+    "file": "assistant_idle.green.20260611.png",
+    "relativePath": "assets/avatars/green-source-archive/work/assistant_idle.green.20260611.png",
+    "bytes": 1370882
+  },
+  {
+    "group": "work",
+    "file": "assistant_shy.green.20260611.png",
+    "relativePath": "assets/avatars/green-source-archive/work/assistant_shy.green.20260611.png",
+    "bytes": 1310630
+  },
+  {
+    "group": "work",
+    "file": "assistant_sleepy.green.20260611.png",
+    "relativePath": "assets/avatars/green-source-archive/work/assistant_sleepy.green.20260611.png",
+    "bytes": 1331866
+  },
+  {
+    "group": "work",
+    "file": "evening_care.green.20260611.png",
+    "relativePath": "assets/avatars/green-source-archive/work/evening_care.green.20260611.png",
+    "bytes": 1360368
+  },
+  {
+    "group": "work",
+    "file": "evening_encourage.green.20260611.png",
+    "relativePath": "assets/avatars/green-source-archive/work/evening_encourage.green.20260611.png",
+    "bytes": 1409932
+  },
+  {
+    "group": "work",
+    "file": "evening_happy.green.20260611.png",
+    "relativePath": "assets/avatars/green-source-archive/work/evening_happy.green.20260611.png",
+    "bytes": 1356525
+  },
+  {
+    "group": "work",
+    "file": "evening_idle.green.20260611.png",
+    "relativePath": "assets/avatars/green-source-archive/work/evening_idle.green.20260611.png",
+    "bytes": 1416139
+  },
+  {
+    "group": "work",
+    "file": "evening_shy.green.20260611.png",
+    "relativePath": "assets/avatars/green-source-archive/work/evening_shy.green.20260611.png",
+    "bytes": 1354922
+  },
+  {
+    "group": "work",
+    "file": "evening_sleepy.green.20260611.png",
+    "relativePath": "assets/avatars/green-source-archive/work/evening_sleepy.green.20260611.png",
+    "bytes": 1461119
+  },
+  {
+    "group": "work",
+    "file": "nurse_care.green.20260611.png",
+    "relativePath": "assets/avatars/green-source-archive/work/nurse_care.green.20260611.png",
+    "bytes": 1303896
+  },
+  {
+    "group": "work",
+    "file": "nurse_encourage.green.20260611.png",
+    "relativePath": "assets/avatars/green-source-archive/work/nurse_encourage.green.20260611.png",
+    "bytes": 1331624
+  },
+  {
+    "group": "work",
+    "file": "nurse_happy.green.20260611.png",
+    "relativePath": "assets/avatars/green-source-archive/work/nurse_happy.green.20260611.png",
+    "bytes": 1424701
+  },
+  {
+    "group": "work",
+    "file": "nurse_idle.green.20260611.png",
+    "relativePath": "assets/avatars/green-source-archive/work/nurse_idle.green.20260611.png",
+    "bytes": 1335757
+  },
+  {
+    "group": "work",
+    "file": "nurse_shy.green.20260611.png",
+    "relativePath": "assets/avatars/green-source-archive/work/nurse_shy.green.20260611.png",
+    "bytes": 1386462
+  },
+  {
+    "group": "work",
+    "file": "nurse_sleepy.green.20260611.png",
+    "relativePath": "assets/avatars/green-source-archive/work/nurse_sleepy.green.20260611.png",
+    "bytes": 1319894
+  },
+  {
+    "group": "work",
+    "file": "qipao_care.green.20260611.png",
+    "relativePath": "assets/avatars/green-source-archive/work/qipao_care.green.20260611.png",
+    "bytes": 1384808
+  },
+  {
+    "group": "work",
+    "file": "qipao_encourage.green.20260611.png",
+    "relativePath": "assets/avatars/green-source-archive/work/qipao_encourage.green.20260611.png",
+    "bytes": 1410143
+  },
+  {
+    "group": "work",
+    "file": "qipao_happy.green.20260611-103157.png",
+    "relativePath": "assets/avatars/green-source-archive/work/qipao_happy.green.20260611-103157.png",
+    "bytes": 1754217
+  },
+  {
+    "group": "work",
+    "file": "qipao_happy.green.20260611-103813.png",
+    "relativePath": "assets/avatars/green-source-archive/work/qipao_happy.green.20260611-103813.png",
+    "bytes": 1393716
+  },
+  {
+    "group": "work",
+    "file": "qipao_idle.green.20260611.png",
+    "relativePath": "assets/avatars/green-source-archive/work/qipao_idle.green.20260611.png",
+    "bytes": 1386122
+  },
+  {
+    "group": "work",
+    "file": "qipao_shy.green.20260611.png",
+    "relativePath": "assets/avatars/green-source-archive/work/qipao_shy.green.20260611.png",
+    "bytes": 1375754
+  },
+  {
+    "group": "work",
+    "file": "qipao_sleepy.green.20260611.png",
+    "relativePath": "assets/avatars/green-source-archive/work/qipao_sleepy.green.20260611.png",
+    "bytes": 1344017
+  },
+  {
+    "group": "work",
+    "file": "vacation_care.green.20260611.png",
+    "relativePath": "assets/avatars/green-source-archive/work/vacation_care.green.20260611.png",
+    "bytes": 1475632
+  },
+  {
+    "group": "work",
+    "file": "vacation_care_v2.green.20260611.png",
+    "relativePath": "assets/avatars/green-source-archive/work/vacation_care_v2.green.20260611.png",
+    "bytes": 1432300
+  },
+  {
+    "group": "work",
+    "file": "vacation_encourage.green.20260611.png",
+    "relativePath": "assets/avatars/green-source-archive/work/vacation_encourage.green.20260611.png",
+    "bytes": 1472865
+  },
+  {
+    "group": "work",
+    "file": "vacation_happy.green.20260611.png",
+    "relativePath": "assets/avatars/green-source-archive/work/vacation_happy.green.20260611.png",
+    "bytes": 1486569
+  },
+  {
+    "group": "work",
+    "file": "vacation_idle.green.20260611.png",
+    "relativePath": "assets/avatars/green-source-archive/work/vacation_idle.green.20260611.png",
+    "bytes": 1501675
+  },
+  {
+    "group": "work",
+    "file": "vacation_shy.green.20260611.png",
+    "relativePath": "assets/avatars/green-source-archive/work/vacation_shy.green.20260611.png",
+    "bytes": 1459170
+  },
+  {
+    "group": "work",
+    "file": "vacation_sleepy.green.20260611.png",
+    "relativePath": "assets/avatars/green-source-archive/work/vacation_sleepy.green.20260611.png",
+    "bytes": 1575454
+  }
+]

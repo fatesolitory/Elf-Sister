@@ -1,0 +1,23 @@
+﻿<svg xmlns="http://www.w3.org/2000/svg" width="720" height="1080" viewBox="0 0 720 1080">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#fff8f6"/><stop offset="1" stop-color="#edf4ff"/></linearGradient>
+    <linearGradient id="dress" x1="0" y1="0" x2="0" y2="1"><stop stop-color="#ffffff"/><stop offset="1" stop-color="#f2d8d0"/></linearGradient>
+  </defs>
+  <rect width="720" height="1080" fill="url(#bg)"/>
+  <ellipse cx="360" cy="1002" rx="170" ry="30" fill="#d8c9c3" opacity="0.35"/>
+  <path d="M246 210 C190 315 184 478 222 622 C185 742 174 882 220 992 C270 1032 450 1032 500 992 C546 882 535 742 498 622 C536 478 530 315 474 210 C420 156 300 156 246 210Z" fill="#f8fbff" opacity="0.9"/>
+  <path d="M286 124 C238 158 220 238 244 314 C270 394 450 394 476 314 C500 238 482 158 434 124 C392 95 328 95 286 124Z" fill="#f7f7f9"/>
+  <circle cx="360" cy="230" r="86" fill="#fde7df"/>
+  <path d="M262 214 C292 118 427 108 462 214 C438 176 408 154 360 154 C312 154 286 176 262 214Z" fill="#f4f5f8"/>
+  <path d="M246 218 C206 320 236 520 150 740 C240 710 286 612 294 434 C302 286 292 224 246 218Z" fill="#f7f8fb"/>
+  <path d="M474 218 C514 320 484 520 570 740 C480 710 434 612 426 434 C418 286 428 224 474 218Z" fill="#f7f8fb"/>
+  <circle cx="330" cy="232" r="8" fill="#7f6061"/><circle cx="390" cy="232" r="8" fill="#7f6061"/>
+  <path d="M336 276 C350 288 370 288 384 276" fill="none" stroke="#b47b7f" stroke-width="5" stroke-linecap="round"/>
+  <path d="M284 368 C314 318 406 318 436 368 L488 730 C438 824 282 824 232 730 Z" fill="url(#dress)" stroke="#c9a493" stroke-width="5"/>
+  <path d="M286 420 C328 460 392 460 434 420" fill="none" stroke="#caa06f" stroke-width="8" opacity="0.55"/>
+  <path d="M300 750 L270 1000 M420 750 L450 1000" stroke="#f0d9d2" stroke-width="34" stroke-linecap="round"/>
+  <path d="M234 418 L164 682 M486 418 L556 682" stroke="#f0d9d2" stroke-width="34" stroke-linecap="round"/>
+  <rect x="56" y="44" width="608" height="92" rx="28" fill="#ffffff" opacity="0.72" stroke="#d7bdae"/>
+  <text x="360" y="92" text-anchor="middle" font-family="Microsoft YaHei, sans-serif" font-size="34" fill="#6d5550">运动健身 / 困倦</text>
+  <text x="360" y="134" text-anchor="middle" font-family="Microsoft YaHei, sans-serif" font-size="22" fill="#9b8580">占位立绘 - 后续替换同名 PNG/SVG</text>
+</svg>

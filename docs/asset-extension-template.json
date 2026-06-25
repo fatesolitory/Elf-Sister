@@ -1,0 +1,39 @@
+{
+  "costumePack": {
+    "id": "summer-pack",
+    "name": "夏日服装包",
+    "version": "1.0.0",
+    "author": "local",
+    "root": "assets/packs/summer-pack",
+    "enabled": true,
+    "description": "新增夏日主题服装。",
+    "costumeIds": ["summer_home"]
+  },
+  "costume": {
+    "id": "summer_home",
+    "name": "夏日居家",
+    "description": "夏日主题服装说明。",
+    "packId": "summer-pack",
+    "enabled": true,
+    "tags": ["summer", "daily"]
+  },
+  "mood": {
+    "id": "surprised",
+    "name": "惊喜",
+    "bubble": "happy"
+  },
+  "avatarOverride": {
+    "summer_home_surprised": "assets/packs/summer-pack/avatars/summer_home_surprised_v1.png"
+  },
+  "defaultAvatarPaths": [
+    "assets/avatars/generated/summer_home_surprised.png",
+    "assets/avatars/summer_home_surprised.svg"
+  ],
+  "replyRuleExample": {
+    "id": "surprise",
+    "label": "惊喜回应",
+    "priority": 70,
+    "mood": "surprised",
+    "keywords": ["惊喜", "意外"]
+  }
+}

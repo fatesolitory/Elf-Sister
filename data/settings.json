@@ -1,0 +1,179 @@
+{
+  "selectedCostume": "home",
+  "selectedMood": "idle",
+  "selectedBubble": "basic",
+  "alwaysOnTop": true,
+  "opacity": 0.96,
+  "scale": 1,
+  "bubbleFontSize": 15,
+  "bubbleScrollSpeed": 0.05,
+  "locked": false,
+  "visibleOnStart": true,
+  "startAlwaysOnTop": true,
+  "edgeSnap": false,
+  "autostart": false,
+  "workMode": false,
+  "companionMode": true,
+  "saveConversations": false,
+  "proactiveBubbles": {
+    "enabled": false,
+    "minutes": 35,
+    "minIdleMinutes": 8
+  },
+  "identity": {
+    "characterName": "桌面陪伴精灵妹妹",
+    "selfReference": "妹妹",
+    "userAddress": "哥哥"
+  },
+  "extensions": {
+    "activeRenderer": "static",
+    "activeCostumePack": "base",
+    "activeLive2DModel": "reserved-live2d",
+    "activeGifAnimation": "reserved-idle-gif",
+    "preferGeneratedAvatars": true
+  },
+  "addons": {
+    "tts": {
+      "enabled": false,
+      "provider": "minimax",
+      "localEnabled": false,
+      "voice": "male-qn-qingse",
+      "rate": 1,
+      "pitch": 0,
+      "volume": 100,
+      "model": "speech-2.8-hd",
+      "emotion": "",
+      "languageBoost": "auto",
+      "audioFormat": "mp3",
+      "sampleRate": 32000,
+      "bitrate": 128000,
+      "channel": 1,
+      "remoteUrl": "https://api-bj.minimaxi.com/v1/t2a_v2",
+      "remoteMethod": "POST",
+      "remoteApiKey": "",
+      "remoteAuthHeader": "Authorization",
+      "remoteContentType": "application/json",
+      "remoteBodyTemplate": "{\n  \"text\": \"{{text}}\",\n  \"voice\": \"{{voice}}\"\n}",
+      "remoteAudioField": "audio",
+      "speakLocalReplies": true,
+      "speakModelReplies": true,
+      "interruptOnNewReply": true,
+      "maxChars": 180,
+      "minIntervalMs": 1200,
+      "cacheEnabled": true
+    },
+    "screenAwareness": {
+      "enabled": false,
+      "mode": "manual",
+      "intervalSeconds": 180,
+      "providerMode": "reuse-model",
+      "visionModel": {
+        "enabled": false,
+        "provider": "mock",
+        "url": "",
+        "baseURL": "",
+        "apiKey": "",
+        "model": "",
+        "temperature": 0.7,
+        "maxTokens": 800,
+        "contextLength": 8,
+        "injectPersona": true,
+        "requestLogging": false,
+        "systemPromptTemplate": "{{persona}}",
+        "timeoutMs": 45000
+      },
+      "prompt": "请看当前桌面截图，并用中文以桌宠妹妹的身份简短回应。重点是陪伴和自然互动：结合屏幕内容、上下文和当前场景，像真的在旁边一样接话；多数日常场景优先用鼓励、赞美、关心或一点傲娇来回应，不要把话说成客服式的“需要我帮你做什么”。只有当用户明确求助，或场景明显是工作、学习、排查、整理任务时，才给出具体协助或下一步建议。不要机械罗列画面清单，不要暴露敏感文本，除非用户明确要求。",
+      "maxImageWidth": 1280,
+      "includeCursor": false
+    }
+  },
+  "reminders": {
+    "water": {
+      "enabled": true,
+      "minutes": 60,
+      "message": "哥哥，喝点水吧。",
+      "mood": "care"
+    },
+    "sitting": {
+      "enabled": true,
+      "minutes": 90,
+      "message": "起来活动一下好不好？妹妹陪你。",
+      "mood": "care"
+    },
+    "rest": {
+      "enabled": true,
+      "minutes": 120,
+      "message": "休息五分钟，眼睛也要被照顾哦。",
+      "mood": "encourage"
+    },
+    "meal": {
+      "enabled": false,
+      "minutes": 240,
+      "message": "哥哥，记得按时吃饭。",
+      "mood": "care"
+    },
+    "sleep": {
+      "enabled": false,
+      "minutes": 180,
+      "message": "已经很晚啦，妹妹想让哥哥早点睡。",
+      "mood": "sleepy"
+    },
+    "inactivity": {
+      "enabled": true,
+      "minutes": 45,
+      "message": "哥哥好久没理我啦，是不是太累了？先放松一下好不好。",
+      "mood": "care"
+    },
+    "eyes": {
+      "enabled": true,
+      "minutes": 40,
+      "message": "哥哥，让眼睛离开屏幕二十秒吧，看远一点会舒服些。",
+      "mood": "care"
+    },
+    "posture": {
+      "enabled": true,
+      "minutes": 50,
+      "message": "哥哥，坐姿稍微调整一下，肩膀和脖子会感谢你的。",
+      "mood": "care"
+    },
+    "breath": {
+      "enabled": true,
+      "minutes": 75,
+      "message": "先慢慢吸一口气，再慢慢呼出去，妹妹陪你把节奏放稳。",
+      "mood": "encourage"
+    },
+    "save": {
+      "enabled": false,
+      "minutes": 30,
+      "message": "哥哥，如果正在写东西，记得顺手保存一下。",
+      "mood": "encourage"
+    },
+    "moodCheck": {
+      "enabled": false,
+      "minutes": 150,
+      "message": "哥哥现在心情还好吗？不舒服的话，可以先停一小会儿。",
+      "mood": "care"
+    },
+    "wrapUp": {
+      "enabled": false,
+      "minutes": 180,
+      "message": "要不要花两分钟整理一下当前进度？这样下一次回来会轻松很多。",
+      "mood": "encourage"
+    }
+  },
+  "model": {
+    "enabled": false,
+    "provider": "mock",
+    "url": "",
+    "baseURL": "",
+    "apiKey": "",
+    "model": "",
+    "temperature": 0.7,
+    "maxTokens": 1200,
+    "contextLength": 40,
+    "injectPersona": true,
+    "requestLogging": false,
+    "systemPromptTemplate": "{{persona}}",
+    "timeoutMs": 30000
+  }
+}

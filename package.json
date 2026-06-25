@@ -1,0 +1,92 @@
+{
+  "name": "desktop-companion-spirit",
+  "version": "0.1.7",
+  "private": true,
+  "author": "Elf Sister",
+  "description": "桌面陪伴精灵 - Electron + React 桌宠原型",
+  "main": "dist/main/main/index.js",
+  "scripts": {
+    "dev": "vite --host 127.0.0.1",
+    "build": "tsc && vite build && tsc -p tsconfig.main.json",
+    "pack:win": "npm run build && electron-builder --win dir --publish never && powershell -NoProfile -ExecutionPolicy Bypass -File scripts/package-win.ps1",
+    "start": "electron .",
+    "app:dev": "concurrently \"vite --host 127.0.0.1\" \"wait-on http://127.0.0.1:5173 && cross-env VITE_DEV_SERVER_URL=http://127.0.0.1:5173 electron .\"",
+    "typecheck": "tsc --noEmit && tsc -p tsconfig.main.json --noEmit"
+  },
+  "build": {
+    "appId": "local.elf-sister.desktop-companion",
+    "productName": "Elf Sister",
+    "directories": {
+      "output": "release"
+    },
+    "asar": false,
+    "files": [
+      "dist/**/*",
+      "index.html",
+      "package.json"
+    ],
+    "extraFiles": [
+      {
+        "from": "data",
+        "to": "data",
+        "filter": [
+          "**/*",
+          "!conversations.json",
+          "!key-points.json",
+          "!model-context.json",
+          "!model-secrets.json",
+          "!backups/**"
+        ]
+      },
+      {
+        "from": "data",
+        "to": "data-defaults",
+        "filter": [
+          "**/*",
+          "!conversations.json",
+          "!key-points.json",
+          "!model-context.json",
+          "!model-secrets.json",
+          "!backups/**"
+        ]
+      },
+      {
+        "from": "assets",
+        "to": "assets"
+      },
+      {
+        "from": "identity",
+        "to": "identity"
+      }
+    ],
+    "win": {
+      "signAndEditExecutable": false,
+      "icon": "assets/icons/elf-sister.ico",
+      "target": [
+        {
+          "target": "dir"
+        }
+      ],
+      "artifactName": "Elf Sister.${ext}"
+    }
+  },
+  "dependencies": {
+    "@vitejs/plugin-react": "^5.0.0",
+    "lucide-react": "^0.468.0",
+    "react": "^19.0.0",
+    "react-dom": "^19.0.0",
+    "typescript": "^5.8.0",
+    "vite": "^7.0.0"
+  },
+  "devDependencies": {
+    "@types/node": "^22.0.0",
+    "@types/react": "^19.0.0",
+    "@types/react-dom": "^19.0.0",
+    "concurrently": "^9.0.0",
+    "cross-env": "^7.0.3",
+    "electron": "^37.0.0",
+    "electron-builder": "^24.13.3",
+    "rcedit": "^5.0.2",
+    "wait-on": "^8.0.0"
+  }
+}

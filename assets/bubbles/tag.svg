@@ -1,0 +1,7 @@
+﻿<svg xmlns="http://www.w3.org/2000/svg" width="620" height="220" viewBox="0 0 620 220">
+  <defs><linearGradient id="bubble" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#f7fbff"/><stop offset="1" stop-color="#e9eef5"/></linearGradient></defs>
+  <path d="M58 18 H562 C584 18 602 36 602 58 V148 C602 170 584 188 562 188 H180 L122 214 L134 188 H58 C36 188 18 170 18 148 V58 C18 36 36 18 58 18Z" fill="url(#bubble)" stroke="#596878" stroke-width="3" opacity="0.94"/>
+  <path d="M72 58 H548" stroke="#596878" stroke-width="2" opacity="0.18"/>
+  <path d="M72 108 H470" stroke="#596878" stroke-width="2" opacity="0.12"/>
+  <text x="310" y="128" text-anchor="middle" font-family="Microsoft YaHei, sans-serif" font-size="28" fill="#596878" opacity="0.34">文本由应用动态渲染</text>
+</svg>

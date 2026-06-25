@@ -1,0 +1,9 @@
+node_modules/
+dist/
+release/
+.vite/
+logs/*.log
+logs/*.jsonl
+data/conversations.json
+data/model-secrets.json
+data/backups/*.bak
