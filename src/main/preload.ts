@@ -20,6 +20,7 @@ contextBridge.exposeInMainWorld("companionAPI", {
   showCompanion: (): Promise<void> => ipcRenderer.invoke("window:show-companion"),
   hideCompanion: (): Promise<void> => ipcRenderer.invoke("window:hide-companion"),
   moveCompanionBy: (deltaX: number, deltaY: number): Promise<void> => ipcRenderer.invoke("window:move-companion-by", deltaX, deltaY),
+  setControlsCollapsed: (collapsed: boolean): Promise<{ ok: boolean; collapsed: boolean; width?: number; height?: number }> => ipcRenderer.invoke("window:set-controls-collapsed", collapsed),
   listTtsVoices: (): Promise<TtsVoice[]> => ipcRenderer.invoke("tts:list-voices"),
   speakText: (text: string): Promise<{ ok: boolean; message?: string; audioUrl?: string }> => ipcRenderer.invoke("tts:speak", text),
   stopSpeech: (): Promise<{ ok: boolean }> => ipcRenderer.invoke("tts:stop"),

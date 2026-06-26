@@ -120,7 +120,7 @@
   "live2dModels": [
     {
       "id": "reserved-live2d",
-      "name": "Live2D 预留模型",
+      "name": "Live2D 模型槽位",
       "modelJson": "assets/live2d/reserved/model.model3.json",
       "enabled": false,
       "scale": 1,
@@ -134,7 +134,7 @@
   "gifAnimations": [
     {
       "id": "reserved-idle-gif",
-      "name": "待机 GIF 预留",
+      "name": "待机 GIF 槽位",
       "file": "assets/gifs/reserved_idle.gif",
       "enabled": false,
       "mood": "idle",

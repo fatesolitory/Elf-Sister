@@ -1,31 +1,40 @@
 # 桌面陪伴精灵
 
-妹妹系桌面陪伴精灵原型，技术栈为 Electron + React + TypeScript + Vite。
+妹妹系桌面陪伴精灵，技术栈为 Electron + React + TypeScript + Vite。当前版本：26.06.24.1.8。
 
 ## 当前能力
 
 - 桌宠透明窗口、独立置顶开关窗口、后台控制台窗口
 - 后台页面：角色人格、素材与状态、扩展接口、陪伴提醒、桌面行为、模型接口、系统设置
 - 置顶、透明度、缩放、隐藏/显示、开机自启动
+- 小气泡、折叠气泡和大型阅读气泡，会按内容长度与结构自动切换
 - 身份文档读取：`identity/persona.md`
 - 本地模拟回复：`data/replies.json`
 - 气泡素材：`assets/bubbles/generated/`
 - 静态立绘素材：`assets/avatars/generated/`
-- 扩展接口预留：服装包、Live2D、GIF 动图、大模型
+- 扩展能力：服装包、静态立绘矩阵、GIF、Live2D 配置、大模型接口
 
 ## 运行方式
 
 安装 Node.js 后，在本目录运行：
 
 ```powershell
-npm install
-npm run app:dev
+npm.cmd install
+npm.cmd run app:dev
 ```
 
 只预览网页界面：
 
 ```powershell
-npm run dev
+npm.cmd run dev
+```
+
+发布前检查：
+
+```powershell
+npm.cmd run check:version
+npm.cmd run typecheck
+npm.cmd run build
 ```
 
 ## 关键配置
@@ -44,7 +53,7 @@ npm run dev
 - `identity/persona.md`：妹妹身份设定
 - `docs/extension-interfaces.md`：扩展接口说明
 
-## 模型接口预留
+## 模型接口
 
 后台“模型接口”支持粘贴服务链接并规范为标准聊天端点：
 

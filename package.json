@@ -1,17 +1,20 @@
 {
   "name": "desktop-companion-spirit",
-  "version": "0.1.7",
+  "version": "26.6.24-1.8",
   "private": true,
   "author": "Elf Sister",
   "description": "桌面陪伴精灵 - Electron + React 桌宠原型",
   "main": "dist/main/main/index.js",
   "scripts": {
-    "dev": "vite --host 127.0.0.1",
-    "build": "tsc && vite build && tsc -p tsconfig.main.json",
-    "pack:win": "npm run build && electron-builder --win dir --publish never && powershell -NoProfile -ExecutionPolicy Bypass -File scripts/package-win.ps1",
+    "dev": "vite --config vite.config.mjs --configLoader native --host 127.0.0.1",
+    "build": "tsc && vite build --config vite.config.mjs --configLoader native && tsc -p tsconfig.main.json",
+    "pack:win": "npm.cmd run build && electron-builder --win dir --publish never && powershell -NoProfile -ExecutionPolicy Bypass -File scripts/package-win.ps1",
     "start": "electron .",
-    "app:dev": "concurrently \"vite --host 127.0.0.1\" \"wait-on http://127.0.0.1:5173 && cross-env VITE_DEV_SERVER_URL=http://127.0.0.1:5173 electron .\"",
-    "typecheck": "tsc --noEmit && tsc -p tsconfig.main.json --noEmit"
+    "app:dev": "concurrently \"vite --config vite.config.mjs --configLoader native --host 127.0.0.1\" \"wait-on http://127.0.0.1:5173 && cross-env VITE_DEV_SERVER_URL=http://127.0.0.1:5173 electron .\"",
+    "typecheck": "tsc --noEmit && tsc -p tsconfig.main.json --noEmit",
+    "check:version": "node scripts/check-version.mjs",
+    "check:assets": "node scripts/check-assets.mjs",
+    "preflight": "npm.cmd run check:version && npm.cmd run check:assets && npm.cmd run typecheck && npm.cmd run build"
   },
   "build": {
     "appId": "local.elf-sister.desktop-companion",

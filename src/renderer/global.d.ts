@@ -16,6 +16,7 @@ declare global {
       showCompanion: () => Promise<void>;
       hideCompanion: () => Promise<void>;
       moveCompanionBy: (deltaX: number, deltaY: number) => Promise<void>;
+      setControlsCollapsed: (collapsed: boolean) => Promise<{ ok: boolean; collapsed: boolean; width?: number; height?: number }>;
       listTtsVoices: () => Promise<TtsVoice[]>;
       speakText: (text: string) => Promise<{ ok: boolean; message?: string; audioUrl?: string }>;
       stopSpeech: () => Promise<{ ok: boolean }>;

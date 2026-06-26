@@ -4,7 +4,7 @@
 
 :root {
   --companion-scale: 1;
-  --bubble-font-size: 15px;
+  --bubble-font-size: 13px;
 }
 
 body {
@@ -38,7 +38,7 @@ button:disabled {
 
 .companion-shell {
   --companion-scale: 1;
-  --bubble-font-size: 15px;
+  --bubble-font-size: 13px;
   width: 100vw;
   height: 100vh;
   position: relative;
@@ -57,6 +57,12 @@ button:disabled {
   cursor: move;
 }
 
+.companion-stage.bubble-expanded .avatar-button {
+  opacity: 0;
+  transform: translateY(22px) scale(0.92);
+  pointer-events: none;
+}
+
 .avatar-button {
   position: absolute;
   left: 18px;
@@ -67,6 +73,12 @@ button:disabled {
   background: transparent;
   padding: 0;
   cursor: pointer;
+  transition: opacity 220ms ease, transform 260ms ease;
+}
+
+.companion-stage.costume-office:not(.bubble-expanded) .avatar-button {
+  transform: translateY(-16px) scale(0.95);
+  transform-origin: center bottom;
 }
 
 .avatar-button.talking .avatar-art {
@@ -78,18 +90,20 @@ button:disabled {
   width: 100%;
   height: 100%;
   object-fit: contain;
-  filter: drop-shadow(0 18px 28px rgba(85, 66, 60, 0.25));
+  filter: drop-shadow(0 20px 30px rgba(85, 66, 60, 0.26));
+  transition: filter 200ms ease, transform 200ms ease;
 }
 
 .speech-bubble {
   position: absolute;
-  top: 8px;
-  left: 8px;
-  width: calc(100% - 30px);
-  max-width: 330px;
-  height: 118px;
+  top: 32px;
+  left: 100px;
+  width: 160px;
+  max-width: 160px;
+  height: 88px;
   z-index: 2;
   cursor: move;
+  animation: bubble-pop-in 220ms ease both;
 }
 
 .speech-bubble img {
@@ -101,7 +115,7 @@ button:disabled {
 
 .speech-bubble p {
   position: absolute;
-  inset: 22px 34px 26px 32px;
+  inset: 16px 20px 20px 19px;
   margin: 0;
   display: flex;
   align-items: center;
@@ -145,23 +159,188 @@ button:disabled {
   border-radius: 999px;
 }
 
-.companion-actions {
+.collapsed-bubble {
   position: absolute;
-  right: 14px;
-  bottom: 10px;
-  display: flex;
-  gap: 8px;
+  top: 78px;
+  left: 50%;
+  z-index: 4;
+  width: 56px;
+  height: 42px;
+  border: 0;
+  background: transparent;
+  display: block;
+  padding: 0;
+  animation: collapsed-bubble-in 220ms ease both;
+}
+
+.collapsed-bubble.dots::after {
+  content: "...";
+  position: absolute;
+  left: 50%;
+  top: 42%;
+  transform: translate(-50%, -50%);
+  color: rgba(111, 62, 82, 0.78);
+  font-size: 18px;
+  font-weight: 700;
+  letter-spacing: 0;
+  line-height: 1;
+  text-shadow: 0 1px 0 rgba(255, 255, 255, 0.55);
+}
+
+.collapsed-bubble img {
+  width: 100%;
+  height: 100%;
+  display: block;
+  object-fit: contain;
+  filter: drop-shadow(0 10px 18px rgba(88, 64, 58, 0.18));
+}
+
+.collapsed-bubble.reminder {
+  width: 42px;
+  height: 72px;
+  top: 56px;
+}
+
+.collapsed-bubble.question {
+  width: 54px;
+  height: 72px;
+  top: 56px;
+}
+
+.expanded-bubble {
+  position: absolute;
+  inset: 12px 12px 54px;
+  z-index: 5;
   cursor: default;
+  animation: expanded-shell-in 260ms ease both;
+}
+
+.expanded-bubble-card {
+  position: absolute;
+  left: 8px;
+  right: 8px;
+  top: 92px;
+  bottom: 0;
+  border: 1px solid rgba(222, 196, 183, 0.82);
+  border-radius: 18px;
+  background:
+    linear-gradient(180deg, rgba(255, 254, 251, 0.98), rgba(255, 246, 241, 0.98));
+  box-shadow:
+    0 24px 50px rgba(69, 50, 43, 0.24),
+    inset 0 1px 0 rgba(255, 255, 255, 0.88);
+  padding: 84px 18px 18px;
+  overflow: hidden;
+}
+
+.expanded-bubble-card::before {
+  content: "";
+  position: absolute;
+  left: 24px;
+  right: 24px;
+  top: 62px;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, rgba(174, 130, 114, 0.24), transparent);
+}
+
+.expanded-bubble-avatar {
+  position: absolute;
+  z-index: 2;
+  left: 50%;
+  top: 0;
+  width: 190px;
+  height: 180px;
+  transform: translateX(-50%);
+  object-fit: cover;
+  object-position: 50% 8%;
+  clip-path: inset(0 0 36% 0 round 0 0 22px 22px);
+  filter: drop-shadow(0 18px 24px rgba(64, 45, 38, 0.24));
+  pointer-events: none;
+  animation: expanded-avatar-in 320ms ease both;
+}
+
+.expanded-bubble-text {
+  width: 100%;
+  height: 100%;
+  overflow: auto;
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+  line-height: 1.65;
+  color: #4d3e3a;
+  font-size: 14px;
+  user-select: text;
+  -webkit-user-select: text;
+  padding-right: 8px;
+  scrollbar-width: thin;
+  scrollbar-color: rgba(151, 118, 106, 0.42) transparent;
+}
+
+.expanded-bubble-text::-webkit-scrollbar {
+  width: 6px;
+}
+
+.expanded-bubble-text::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.expanded-bubble-text::-webkit-scrollbar-thumb {
+  background: rgba(151, 118, 106, 0.36);
+  border-radius: 999px;
+}
+
+@keyframes bubble-pop-in {
+  from {
+    opacity: 0;
+    transform: translateY(8px) scale(0.98);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+@keyframes collapsed-bubble-in {
+  from {
+    opacity: 0;
+    transform: translateX(-50%) translateY(-4px) scale(0.9);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(-50%) translateY(0) scale(1);
+  }
+}
+
+@keyframes expanded-shell-in {
+  from {
+    opacity: 0;
+    transform: translateY(18px) scale(0.96);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+@keyframes expanded-avatar-in {
+  from {
+    opacity: 0;
+    transform: translateX(-50%) translateY(20px) scale(0.9);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(-50%) translateY(0) scale(1);
+  }
 }
 
 .companion-chat {
   position: absolute;
-  left: 14px;
-  right: 88px;
-  bottom: 10px;
+  left: 50%;
+  right: auto;
+  bottom: 38px;
+  width: 160px;
   display: grid;
-  grid-template-columns: minmax(0, 1fr) 62px;
-  gap: 6px;
+  grid-template-columns: minmax(0, 1fr) 40px;
+  gap: 5px;
+  transform: translateX(-50%);
   cursor: default;
   user-select: text;
   -webkit-user-select: text;
@@ -169,32 +348,47 @@ button:disabled {
 
 .companion-chat input {
   min-width: 0;
-  height: 36px;
+  height: 28px;
   border: 1px solid rgba(151, 118, 106, 0.24);
-  background: rgba(255, 250, 247, 0.9);
+  background: rgba(255, 253, 250, 0.94);
   color: #5d4943;
   border-radius: 8px;
-  padding: 8px 10px;
-  font-size: 14px;
-  box-shadow: 0 8px 24px rgba(88, 64, 58, 0.12);
+  padding: 4px 8px;
+  font-size: 12px;
+  box-shadow: 0 10px 26px rgba(88, 64, 58, 0.13);
+  backdrop-filter: blur(10px);
 }
 
 .companion-chat button {
+  height: 28px;
   border: 1px solid rgba(151, 118, 106, 0.24);
-  background: rgba(255, 240, 223, 0.94);
+  background: rgba(255, 236, 220, 0.96);
   color: #6e5550;
   border-radius: 8px;
-  font-size: 14px;
-  box-shadow: 0 8px 24px rgba(88, 64, 58, 0.12);
+  font-size: 12px;
+  box-shadow: 0 10px 26px rgba(88, 64, 58, 0.14);
+  backdrop-filter: blur(10px);
 }
 
-.companion-actions button {
-  border: 1px solid rgba(151, 118, 106, 0.24);
-  background: rgba(255, 250, 247, 0.88);
-  color: #6e5550;
-  border-radius: 8px;
-  padding: 8px;
-  box-shadow: 0 8px 24px rgba(88, 64, 58, 0.14);
+.companion-controls-fold {
+  position: absolute;
+  left: 50%;
+  bottom: 50px;
+  z-index: 3;
+  width: 56px;
+  height: 19px;
+  border: 0;
+  background: transparent;
+  padding: 0;
+  transform: translateX(-50%);
+  filter: drop-shadow(0 8px 18px rgba(88, 64, 58, 0.15));
+}
+
+.companion-controls-fold img {
+  width: 100%;
+  height: 100%;
+  display: block;
+  object-fit: fill;
 }
 
 .admin-layout {
@@ -202,7 +396,8 @@ button:disabled {
   min-width: 1180px;
   display: grid;
   grid-template-columns: 248px minmax(0, 1fr);
-  background: #f6f3ef;
+  background:
+    linear-gradient(180deg, #fbf8f4 0%, #f2eee8 100%);
   color: #2e2a27;
   overflow: hidden;
 }
@@ -210,7 +405,8 @@ button:disabled {
 .admin-sidebar {
   padding: 20px 16px;
   border-right: 1px solid #e4d9cf;
-  background: #fffaf4;
+  background:
+    linear-gradient(180deg, rgba(255, 252, 247, 0.98), rgba(255, 246, 238, 0.96));
   display: flex;
   flex-direction: column;
   gap: 18px;
@@ -278,9 +474,10 @@ button:disabled {
 }
 
 .admin-nav button.selected {
-  background: #ebe4ff;
+  background: linear-gradient(135deg, #ebe4ff, #fff2e7);
   color: #5d45cf;
   font-weight: 700;
+  box-shadow: inset 0 0 0 1px rgba(124, 92, 255, 0.12);
 }
 
 .admin-nav small {
@@ -299,11 +496,12 @@ button:disabled {
 .admin-side-note {
   margin-top: auto;
   border: 1px solid #e4d9cf;
-  background: #fffdf9;
+  background: rgba(255, 253, 249, 0.86);
   border-radius: 8px;
   padding: 12px;
   display: grid;
   gap: 10px;
+  box-shadow: 0 12px 28px rgba(72, 58, 48, 0.08);
 }
 
 .admin-side-note p {
@@ -324,7 +522,8 @@ button:disabled {
   min-height: 78px;
   padding: 16px 24px;
   border-bottom: 1px solid #e4d9cf;
-  background: rgba(255, 253, 249, 0.9);
+  background: rgba(255, 253, 249, 0.92);
+  backdrop-filter: blur(12px);
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -407,9 +606,9 @@ button:disabled {
 .admin-content-card,
 .admin-side-panel {
   border: 1px solid #e4d9cf;
-  background: #fffdf9;
+  background: rgba(255, 253, 249, 0.94);
   border-radius: 8px;
-  box-shadow: 0 18px 50px rgba(53, 45, 38, 0.10);
+  box-shadow: 0 18px 50px rgba(53, 45, 38, 0.11);
 }
 
 .admin-content-card {
@@ -452,7 +651,8 @@ button:disabled {
 
 .admin-hero {
   border: 1px solid #e4d9cf;
-  background: #fffaf4;
+  background:
+    linear-gradient(135deg, rgba(255, 250, 244, 0.98), rgba(244, 240, 255, 0.9));
   border-radius: 8px;
   padding: 18px;
   display: grid;
@@ -460,13 +660,15 @@ button:disabled {
   gap: 20px;
   align-items: center;
   margin-bottom: 18px;
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.72);
 }
 
 .admin-avatar-preview {
   min-height: 300px;
   border-radius: 8px;
   border: 1px solid #e4d9cf;
-  background: #f9f5ef;
+  background:
+    radial-gradient(circle at 50% 18%, rgba(255, 255, 255, 0.88), rgba(247, 239, 231, 0.88));
   display: grid;
   place-items: center;
   overflow: hidden;
@@ -759,7 +961,7 @@ textarea {
 .feature-list div,
 .reply-library article {
   border: 1px solid #ead4ca;
-  background: #fffdfb;
+  background: rgba(255, 253, 251, 0.94);
   border-radius: 8px;
   padding: 12px 14px;
 }
@@ -798,12 +1000,14 @@ textarea {
 
 .background-story {
   border: 1px solid #ead4ca;
-  background: #fffdfb;
+  background:
+    linear-gradient(135deg, rgba(255, 253, 251, 0.96), rgba(250, 246, 255, 0.9));
   border-radius: 8px;
   padding: 16px;
   display: grid;
   gap: 12px;
   margin-bottom: 18px;
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.76);
 }
 
 .background-story h3 {

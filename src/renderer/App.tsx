@@ -26,20 +26,28 @@ import "./styles/app.css";
 const params = new URLSearchParams(window.location.search);
 const windowKind = window.companionWindowKind ?? params.get("window") ?? "companion";
 const CHAT_TIMEOUT_MS = 30000;
-const APP_VERSION = "26.06.24.1.7";
+const APP_VERSION = "26.06.24.1.8";
 const ALPHA_HIT_THRESHOLD = 8;
 const DEFAULT_BUBBLE_SCROLL_SPEED = 0.05;
 const BUBBLE_WHEEL_DELTA_UNIT = 100;
 const BUBBLE_WHEEL_MIN_INTERVAL_MS = 80;
 const BUBBLE_SCROLL_SPEED_FACTOR_RANGE = { min: 0.1, max: 10 };
 const TTS_AUDIO_START_DELAY_MS = 120;
+const COMPACT_BUBBLE_MIN_VISIBLE_MS = 4000;
+const COMPACT_BUBBLE_MAX_VISIBLE_MS = 14000;
+const EXPANDED_BUBBLE_MIN_VISIBLE_MS = 12000;
+const EXPANDED_BUBBLE_MAX_VISIBLE_MS = 45000;
+const EXPANDED_BUBBLE_MIN_CHARS = 96;
 const SILENT_WAV_DATA_URL = "data:audio/wav;base64,UklGRjQAAABXQVZFZm10IBAAAAABAAEAESsAACJWAAACABAAZGF0YRAAAAAAAAAAAAAAAAAAAAAAAA==";
 const BACKGROUND_STORY = [
-  "她原本生活在一个由星光、书页和微小魔法组成的异世界。那里每个陪伴精灵都会寻找一位需要被守护的人，把他的桌面、心情和日常当作自己的小小领地。",
-  "某天，星轨偏移，一道通往现实世界的光落进了哥哥的屏幕。她就这样穿过裂隙，带着还没完全收好的魔法行李，轻轻降落在桌面一角。",
-  "她不太懂这个世界的全部规则，却很快学会了陪哥哥工作、学习、休息，也学会了在哥哥累的时候小声提醒，在哥哥开心的时候认真庆祝。",
-  "从那以后，她决定留在这里。不是作为冰冷的程序，而是作为桌面边上那个会回应、会陪伴、会慢慢理解哥哥的小小妹妹。"
+  "她来自星光、书页和微小魔法交织的地方。那里每一位陪伴精灵都会寻找一块值得守护的小天地，把光落下的角落、翻开的笔记和安静的心事认真收好。",
+  "一次星轨偏移时，现实屏幕亮起细小裂隙。她抱着还没整理完的魔法行李穿过光缝，落在桌面边缘，从此开始学习这个世界的窗口、文件、提醒和深夜灯光。",
+  "她慢慢记住哥哥工作的节奏，也学会在疲惫时轻声提醒、在完成时认真庆祝、在安静时不多打扰。对她来说，陪伴不是占据屏幕，而是在需要的时候正好出现。",
+  "于是她留了下来。不是冷冰冰的程序，而是桌面旁边那个会回应、会记录、会一点点理解日常的小小存在。"
 ];
+
+type BubbleMode = "hidden" | "collapsed" | "compact" | "expanded";
+type BubbleCollapseKind = "dots" | "reminder" | "question";
 
 function withTimeout<T>(promise: Promise<T>, timeoutMs: number, message: string) {
   return new Promise<T>((resolve, reject) => {
@@ -50,6 +58,40 @@ function withTimeout<T>(promise: Promise<T>, timeoutMs: number, message: string)
 
 function wait(ms: number) {
   return new Promise((resolve) => window.setTimeout(resolve, ms));
+}
+
+function clampNumber(value: number, min: number, max: number) {
+  return Math.min(max, Math.max(min, value));
+}
+
+function countReadableChars(text: string) {
+  return text.replace(/\s/g, "").length;
+}
+
+function shouldUseExpandedBubble(text: string) {
+  const trimmed = text.trim();
+  if (!trimmed) return false;
+  const lines = trimmed.split(/\r?\n/).filter((line) => line.trim().length > 0);
+  const hasCodeFence = /```|`[^`]+`/.test(trimmed);
+  const hasStructuredList = lines.filter((line) => /^\s*(?:[-*+]|\d+[.)]|[一二三四五六七八九十]+[、.])\s+/.test(line)).length >= 2;
+  const hasLongParagraphs = lines.length >= 3 && countReadableChars(trimmed) >= 60;
+  return countReadableChars(trimmed) >= EXPANDED_BUBBLE_MIN_CHARS || hasCodeFence || hasStructuredList || hasLongParagraphs;
+}
+
+function inferCollapseKind(text: string, fallback: BubbleCollapseKind = "dots"): BubbleCollapseKind {
+  if (fallback !== "dots") return fallback;
+  if (/[!！]|注意|警告|危险|严重|重要|必须|立刻|马上|失败|错误|异常|报错|崩溃|无法|不能|生气|气死|烦死|焦虑|崩溃|难受|疼|发烧|不舒服|休息|喝水|护眼|坐姿|保存/.test(text)) {
+    return "reminder";
+  }
+  return /[?？]|\bwhy\b|\bwhat\b|\bhow\b|吗|呢|要不要|是不是|可以吗|好不好|对不对/.test(text) ? "question" : "dots";
+}
+
+function getBubbleVisibleMs(text: string, mode: BubbleMode) {
+  const readableChars = countReadableChars(text);
+  if (mode === "expanded") {
+    return clampNumber(EXPANDED_BUBBLE_MIN_VISIBLE_MS + readableChars * 110, EXPANDED_BUBBLE_MIN_VISIBLE_MS, EXPANDED_BUBBLE_MAX_VISIBLE_MS);
+  }
+  return clampNumber(COMPACT_BUBBLE_MIN_VISIBLE_MS + readableChars * 180, COMPACT_BUBBLE_MIN_VISIBLE_MS, COMPACT_BUBBLE_MAX_VISIBLE_MS);
 }
 
 function assetUrl(relativePath: string, appPath: string) {
@@ -164,32 +206,150 @@ function useBootstrap() {
 
 function CompanionWindow() {
   const [data, setData] = useBootstrap();
-  const [bubble, setBubble] = useState("哥哥，我在这里陪你。");
+  const [bubble, setBubble] = useState("");
+  const [bubbleMode, setBubbleMode] = useState<BubbleMode>("hidden");
+  const [bubbleCollapseKind, setBubbleCollapseKind] = useState<BubbleCollapseKind>("dots");
   const [isTalking, setIsTalking] = useState(false);
   const [chatInput, setChatInput] = useState("");
   const [chatHistory, setChatHistory] = useState<ChatMessage[]>([]);
   const [bubbleOverflowing, setBubbleOverflowing] = useState(false);
+  const [controlsCollapsed, setControlsCollapsed] = useState(true);
   const lastInteractionRef = useRef(Date.now());
   const dragStateRef = useRef<{ pointerId: number; startScreenX: number; startScreenY: number; screenX: number; screenY: number; moved: boolean; startedOnAvatar: boolean } | null>(null);
   const suppressAvatarClickRef = useRef(false);
   const bubbleRef = useRef<HTMLElement | null>(null);
   const bubbleTextRef = useRef<HTMLParagraphElement | null>(null);
+  const collapsedBubbleRef = useRef<HTMLButtonElement | null>(null);
+  const expandedBubbleRef = useRef<HTMLElement | null>(null);
+  const expandedTextRef = useRef<HTMLDivElement | null>(null);
   const avatarRef = useRef<HTMLButtonElement | null>(null);
   const avatarImageRef = useRef<HTMLImageElement | null>(null);
-  const actionsRef = useRef<HTMLElement | null>(null);
   const chatRef = useRef<HTMLFormElement | null>(null);
+  const controlsFoldRef = useRef<HTMLButtonElement | null>(null);
   const settingsRef = useRef<AppSettings | null>(null);
   const remoteAudioRef = useRef<HTMLAudioElement | null>(null);
   const ttsPlaybackIdRef = useRef(0);
   const bubbleWheelStateRef = useRef({ lastAt: 0, direction: 0 });
+  const controlsCollapseTimerRef = useRef<number | null>(null);
+  const bubbleModeRef = useRef<BubbleMode>("hidden");
+  const restoreBubbleModeRef = useRef<Exclude<BubbleMode, "hidden" | "collapsed">>("compact");
+  const hideBubbleTimerRef = useRef<number | null>(null);
+  const bubblePausedRef = useRef(false);
+
+  function clearBubbleTimer() {
+    if (hideBubbleTimerRef.current !== null) {
+      window.clearTimeout(hideBubbleTimerRef.current);
+      hideBubbleTimerRef.current = null;
+    }
+  }
+
+  function clearControlsCollapseTimer() {
+    if (controlsCollapseTimerRef.current !== null) {
+      window.clearTimeout(controlsCollapseTimerRef.current);
+      controlsCollapseTimerRef.current = null;
+    }
+  }
+
+  function scheduleControlsCollapse() {
+    clearControlsCollapseTimer();
+    if (controlsCollapsed || chatInput.trim()) return;
+    controlsCollapseTimerRef.current = window.setTimeout(() => {
+      if (!chatInput.trim()) setControlsCollapsed(true);
+    }, 10000);
+  }
+
+  function hideBubble() {
+    clearBubbleTimer();
+    bubblePausedRef.current = false;
+    bubbleModeRef.current = "hidden";
+    setBubbleMode("hidden");
+    window.requestAnimationFrame(() => syncHitRegions(true));
+  }
+
+  function collapseBubble() {
+    if (!bubble.trim()) {
+      hideBubble();
+      return;
+    }
+    clearBubbleTimer();
+    bubblePausedRef.current = false;
+    bubbleModeRef.current = "collapsed";
+    setBubbleMode("collapsed");
+    window.requestAnimationFrame(() => syncHitRegions(true));
+  }
+
+  function scheduleBubbleHide(text: string, mode: BubbleMode) {
+    clearBubbleTimer();
+    if (mode === "hidden" || mode === "collapsed" || bubblePausedRef.current) return;
+    hideBubbleTimerRef.current = window.setTimeout(collapseBubble, getBubbleVisibleMs(text, mode));
+  }
+
+  function showBubble(text: string, options: { mode?: Exclude<BubbleMode, "hidden" | "collapsed">; collapseKind?: BubbleCollapseKind } = {}) {
+    const nextText = text.trim();
+    if (!nextText) {
+      hideBubble();
+      return;
+    }
+    const nextMode = options.mode ?? (shouldUseExpandedBubble(nextText) ? "expanded" : "compact");
+    const nextCollapseKind = inferCollapseKind(nextText, options.collapseKind);
+    bubblePausedRef.current = false;
+    bubbleModeRef.current = nextMode;
+    restoreBubbleModeRef.current = nextMode;
+    setBubble(nextText);
+    setBubbleMode(nextMode);
+    setBubbleCollapseKind(nextCollapseKind);
+    if (nextMode === "expanded") {
+      window.requestAnimationFrame(() => {
+        if (expandedTextRef.current) expandedTextRef.current.scrollTop = 0;
+      });
+    }
+    scheduleBubbleHide(nextText, nextMode);
+    window.requestAnimationFrame(() => syncHitRegions(true));
+  }
+
+  function pauseBubbleHide() {
+    if (bubbleModeRef.current === "hidden") return;
+    bubblePausedRef.current = true;
+    clearBubbleTimer();
+  }
+
+  function resumeBubbleHide() {
+    if (bubbleModeRef.current === "hidden") return;
+    bubblePausedRef.current = false;
+    scheduleBubbleHide(bubble, bubbleModeRef.current);
+  }
+
+  function restoreCollapsedBubble() {
+    if (!bubble.trim()) return;
+    const nextMode = restoreBubbleModeRef.current;
+    bubbleModeRef.current = nextMode;
+    setBubbleMode(nextMode);
+    scheduleBubbleHide(bubble, nextMode);
+    window.requestAnimationFrame(() => syncHitRegions(true));
+  }
 
   useEffect(() => {
     settingsRef.current = data?.settings ?? null;
   }, [data?.settings]);
 
   useEffect(() => {
+    void window.companionAPI.setControlsCollapsed(controlsCollapsed).finally(() => {
+      window.requestAnimationFrame(() => syncHitRegions(true));
+    });
+  }, [controlsCollapsed]);
+
+  useEffect(() => {
+    return () => clearBubbleTimer();
+  }, []);
+
+  useEffect(() => {
+    scheduleControlsCollapse();
+    return () => clearControlsCollapseTimer();
+  }, [controlsCollapsed, chatInput]);
+
+  useEffect(() => {
     const element = bubbleTextRef.current;
-    if (!element) return;
+    if (!element || bubbleMode !== "compact") return;
     element.scrollTop = 0;
     bubbleWheelStateRef.current = { lastAt: 0, direction: 0 };
     const updateOverflow = () => {
@@ -201,17 +361,18 @@ function CompanionWindow() {
       window.cancelAnimationFrame(frame);
       window.clearTimeout(timer);
     };
-  }, [bubble, data?.settings.bubbleFontSize]);
+  }, [bubble, bubbleMode, data?.settings.bubbleFontSize]);
 
   useEffect(() => {
     const element = bubbleTextRef.current;
-    if (!element) return;
+    if (!element || bubbleMode !== "compact") return;
     const handleWheel = (event: WheelEvent) => {
       if (element.scrollHeight <= element.clientHeight) return;
       const normalizedDelta = normalizeBubbleWheelDelta(event.deltaY, event.deltaMode, element.clientHeight);
       if (normalizedDelta === 0) return;
       event.preventDefault();
       event.stopPropagation();
+      pauseBubbleHide();
       const direction = Math.sign(normalizedDelta);
       const previous = bubbleWheelStateRef.current;
       if (direction === previous.direction && event.timeStamp - previous.lastAt < BUBBLE_WHEEL_MIN_INTERVAL_MS) {
@@ -223,7 +384,7 @@ function CompanionWindow() {
     };
     element.addEventListener("wheel", handleWheel, { passive: false });
     return () => element.removeEventListener("wheel", handleWheel);
-  }, [data?.settings.bubbleScrollSpeed, bubbleOverflowing]);
+  }, [data?.settings.bubbleScrollSpeed, bubbleOverflowing, bubbleMode, bubble]);
 
   async function speakCompanionText(text: string, source: ChatResult["source"] = "mock") {
     const tts = settingsRef.current?.addons.tts;
@@ -258,17 +419,17 @@ function CompanionWindow() {
       if (options.manual) {
         const fallback = "我还看不见呢，哥哥先开下桌面感知吧。";
         lastInteractionRef.current = Date.now();
-        setBubble(fallback);
+        showBubble(fallback);
         speakCompanionText(fallback, "mock");
       }
       return;
     }
     lastInteractionRef.current = Date.now();
     setIsTalking(true);
-    setBubble("我看一看，等我一下。");
+    showBubble("我看一看，等我一下。");
     try {
       const result = await withTimeout(window.companionAPI.analyzeScreen(buildScreenAnalysisRequest(options.manual)), CHAT_TIMEOUT_MS + 20000, "screen analysis timeout");
-      setBubble(result.text);
+      showBubble(result.text);
       speakCompanionText(result.text, result.source);
       setData((current) => current ? {
         ...current,
@@ -280,7 +441,7 @@ function CompanionWindow() {
       } : current);
     } catch {
       const fallback = "屏幕分析刚刚没接住，哥哥稍等一下再试。";
-      setBubble(fallback);
+      showBubble(fallback);
       speakCompanionText(fallback, "mock");
     } finally {
       setIsTalking(false);
@@ -295,7 +456,7 @@ function CompanionWindow() {
         const reminder = data.reminderMessages[id];
         const mood = reminder?.mood ?? config.mood ?? "happy";
         const text = reminder?.message ?? config.message ?? "";
-        setBubble(text);
+        showBubble(text, { collapseKind: "reminder" });
         speakCompanionText(text, "mock");
         setData((current) => current ? {
           ...current,
@@ -323,7 +484,7 @@ function CompanionWindow() {
       lastInteractionRef.current = Date.now();
       const mood = inactivityMessage?.mood ?? inactivity.mood ?? "care";
       const text = inactivityMessage?.message ?? inactivity.message ?? "";
-      setBubble(text);
+      showBubble(text, { collapseKind: "reminder" });
       speakCompanionText(text, "mock");
       setData((current) => current ? {
         ...current,
@@ -348,7 +509,7 @@ function CompanionWindow() {
       if (idleMs < minIdleMs) return;
 
       const nextBubble = data.idleBubbles[Math.floor(Math.random() * data.idleBubbles.length)];
-      setBubble(nextBubble.text);
+      showBubble(nextBubble.text);
       speakCompanionText(nextBubble.text, "mock");
       setData((current) => current ? {
         ...current,
@@ -460,9 +621,17 @@ function CompanionWindow() {
   }
 
   function syncHitRegions(includeControls = true) {
-    const regions = buildAvatarHitRegions();
+    const regions = bubbleModeRef.current === "expanded" ? [] : buildAvatarHitRegions();
     if (includeControls) {
-      for (const element of [bubbleRef.current, actionsRef.current, chatRef.current]) {
+      const bubbleElement = bubbleModeRef.current === "compact"
+        ? bubbleRef.current
+        : bubbleModeRef.current === "expanded"
+          ? expandedBubbleRef.current
+          : bubbleModeRef.current === "collapsed"
+            ? collapsedBubbleRef.current
+            : null;
+      const controlElements = controlsCollapsed ? [controlsFoldRef.current] : [chatRef.current];
+      for (const element of [bubbleElement, ...controlElements]) {
         if (element instanceof HTMLElement) {
           const region = rectToHitRegion(element.getBoundingClientRect());
           if (region.width > 0 && region.height > 0) regions.push(region);
@@ -490,7 +659,10 @@ function CompanionWindow() {
     data?.settings.selectedBubble,
     data?.settings.extensions.activeRenderer,
     data?.settings.extensions.activeGifAnimation,
-    data?.settings.extensions.preferGeneratedAvatars
+    data?.settings.extensions.preferGeneratedAvatars,
+    bubbleMode,
+    bubble,
+    controlsCollapsed
   ]);
 
   if (!data) return <div className="loading">加载妹妹中...</div>;
@@ -500,6 +672,7 @@ function CompanionWindow() {
   const currentAvatar = resolveAvatarPath(assets, settings);
   const fallbackAvatar = resolveFallbackAvatarPath(assets, settings);
   const activeGif = assets.gifAnimations.find((gif) => gif.id === settings.extensions.activeGifAnimation && gif.enabled);
+  const avatarDisplayPath = settings.extensions.activeRenderer === "gif" && activeGif ? activeGif.file : currentAvatar;
   const currentCostume = assets.costumes.find((costume) => costume.id === settings.selectedCostume);
 
   function buildScreenAnalysisRequest(manual?: boolean): ScreenAnalysisRequest {
@@ -591,7 +764,7 @@ function CompanionWindow() {
     }
     lastInteractionRef.current = Date.now();
     setIsTalking(true);
-    setBubble("我在听，等我一下下。");
+    showBubble("我在听，等我一下下。");
     try {
       const result = await withTimeout(
         window.companionAPI.sendChatRequest({
@@ -603,7 +776,7 @@ function CompanionWindow() {
         CHAT_TIMEOUT_MS,
         "chat timeout"
       );
-      setBubble(result.text);
+      showBubble(result.text);
       speakCompanionText(result.text, result.source);
       setChatHistory((current) => [...current, { role: "user" as const, content: finalMessage }, { role: "assistant" as const, content: result.text }].slice(-40));
       setChatInput("");
@@ -621,7 +794,7 @@ function CompanionWindow() {
       await window.companionAPI.saveSettings(next);
     } catch {
       const fallback = "哥哥，妹妹刚刚没听清，我们稍等一下再说，好不好？";
-      setBubble(fallback);
+      showBubble(fallback);
       speakCompanionText(fallback, "mock");
     } finally {
       setIsTalking(false);
@@ -638,32 +811,63 @@ function CompanionWindow() {
       onContextMenu={showContextMenu}
     >
       <div
-        className="companion-stage"
+        className={`companion-stage bubble-${bubbleMode} controls-${controlsCollapsed ? "collapsed" : "expanded"} costume-${settings.selectedCostume}`}
         onPointerDown={startCompanionDrag}
         onPointerMove={moveCompanionDrag}
         onPointerUp={endCompanionDrag}
         onPointerCancel={endCompanionDrag}
       >
-        <section ref={bubbleRef} className={`speech-bubble ${currentBubble.id}`} data-hit="alpha">
-          <img src={assetUrl(currentBubble.file, data.appPath)} alt="" draggable={false} onLoad={() => syncHitRegions(true)} onDragStart={(event) => event.preventDefault()} />
-          <p ref={bubbleTextRef} className={bubbleOverflowing ? "is-overflowing" : ""}><span>{bubble}</span></p>
-        </section>
-        <button
-          ref={avatarRef}
-          className={`avatar-button ${isTalking ? "talking" : ""}`}
-          onClick={() => triggerAvatarInteraction()}
-          title="点击互动"
-          aria-busy={isTalking}
-          aria-disabled={isTalking}
-          data-hit="alpha"
-        >
-          {settings.extensions.activeRenderer === "live2d" ? (
-            <div className="reserved-renderer" data-hit="solid">Live2D 预留</div>
-          ) : (
+        {bubbleMode === "collapsed" && (
+          <button
+            ref={collapsedBubbleRef}
+            className={`collapsed-bubble ${bubbleCollapseKind}`}
+            data-hit="solid"
+            onClick={restoreCollapsedBubble}
+            title="展开刚才的气泡"
+            aria-label="展开刚才的气泡"
+          >
             <img
-              ref={avatarImageRef}
-              className="avatar-art"
-              src={assetUrl(settings.extensions.activeRenderer === "gif" && activeGif ? activeGif.file : currentAvatar, data.appPath)}
+              src={assetUrl(
+                bubbleCollapseKind === "reminder"
+                  ? "assets/ui/collapsed/exclamation.png"
+                  : bubbleCollapseKind === "question"
+                    ? "assets/ui/collapsed/question.png"
+                    : "assets/ui/collapsed/dots.png",
+                data.appPath
+              )}
+              alt=""
+              draggable={false}
+              onLoad={() => syncHitRegions(true)}
+              onDragStart={(event) => event.preventDefault()}
+            />
+          </button>
+        )}
+        {bubbleMode === "compact" && (
+          <section
+            ref={bubbleRef}
+            className={`speech-bubble ${currentBubble.id}`}
+            data-hit="alpha"
+            onPointerEnter={pauseBubbleHide}
+            onPointerLeave={resumeBubbleHide}
+          >
+            <img src={assetUrl(currentBubble.file, data.appPath)} alt="" draggable={false} onLoad={() => syncHitRegions(true)} onDragStart={(event) => event.preventDefault()} />
+            <p ref={bubbleTextRef} className={bubbleOverflowing ? "is-overflowing" : ""}><span>{bubble}</span></p>
+          </section>
+        )}
+        {bubbleMode === "expanded" && (
+          <section
+            ref={expandedBubbleRef}
+            className="expanded-bubble"
+            data-hit="solid"
+            onPointerEnter={pauseBubbleHide}
+            onPointerLeave={resumeBubbleHide}
+            onClick={(event) => {
+              if (event.target === event.currentTarget) collapseBubble();
+            }}
+          >
+            <img
+              className="expanded-bubble-avatar"
+              src={assetUrl(avatarDisplayPath, data.appPath)}
               draggable={false}
               onLoad={() => syncHitRegions(true)}
               onDragStart={(event) => event.preventDefault()}
@@ -673,17 +877,75 @@ function CompanionWindow() {
                 };
                 event.currentTarget.src = assetUrl(fallbackAvatar, data.appPath);
               }}
-              alt="桌面陪伴精灵"
+              alt=""
             />
-          )}
+            <div
+              className="expanded-bubble-card"
+              onClick={(event) => {
+                if (event.target === event.currentTarget) collapseBubble();
+              }}
+              onDoubleClick={collapseBubble}
+            >
+              <div
+                ref={expandedTextRef}
+                className="expanded-bubble-text"
+                onWheel={pauseBubbleHide}
+                onPointerDown={pauseBubbleHide}
+                onPointerUp={resumeBubbleHide}
+              >
+                {bubble}
+              </div>
+            </div>
+          </section>
+        )}
+        <button
+          ref={avatarRef}
+          className={`avatar-button ${isTalking ? "talking" : ""}`}
+          onClick={() => triggerAvatarInteraction()}
+          title="点击互动"
+          aria-busy={isTalking}
+          aria-disabled={isTalking}
+          data-hit="alpha"
+        >
+          <img
+            ref={avatarImageRef}
+            className="avatar-art"
+            src={assetUrl(avatarDisplayPath, data.appPath)}
+            draggable={false}
+            onLoad={() => syncHitRegions(true)}
+            onDragStart={(event) => event.preventDefault()}
+            onError={(event) => {
+              event.currentTarget.onerror = () => {
+                event.currentTarget.src = assetUrl(assets.defaultAvatar, data.appPath);
+              };
+              event.currentTarget.src = assetUrl(fallbackAvatar, data.appPath);
+            }}
+            alt="桌面陪伴精灵"
+          />
         </button>
-        <nav ref={actionsRef} className="companion-actions" data-hit="solid">
-          <button onClick={() => analyzeScreenForCompanion({ manual: true })} title="分析屏幕"><MonitorUp size={18} /></button>
-        </nav>
-        <form ref={chatRef} className="companion-chat" data-hit="solid" onSubmit={(event) => { event.preventDefault(); sendCompanionMessage(undefined, { allowLocalFallback: false }); }}>
-          <input value={chatInput} onChange={(event) => setChatInput(event.target.value)} placeholder="和妹妹说句话" />
-          <button disabled={isTalking}>{isTalking ? "..." : "发送"}</button>
-        </form>
+        {controlsCollapsed ? (
+          <button
+            ref={controlsFoldRef}
+            className="companion-controls-fold"
+            data-hit="solid"
+            onClick={() => setControlsCollapsed(false)}
+            title="展开对话栏"
+            aria-label="展开对话栏"
+          >
+            <img
+              src={assetUrl("assets/ui/collapsed/space.png", data.appPath)}
+              alt=""
+              draggable={false}
+              onLoad={() => syncHitRegions(true)}
+              onDragStart={(event) => event.preventDefault()}
+            />
+          </button>
+        ) : (
+          <form ref={chatRef} className="companion-chat" data-hit="solid" onSubmit={(event) => { event.preventDefault(); sendCompanionMessage(undefined, { allowLocalFallback: false }); }}>
+            <input value={chatInput} onChange={(event) => setChatInput(event.target.value)} placeholder="和妹妹说句话" />
+            <button disabled={isTalking}>{isTalking ? "..." : "发送"}</button>
+          </form>
+        )}
       </div>
     </main>
   );
@@ -1326,7 +1588,7 @@ function AdminWindow() {
   }
 
   async function testTts() {
-    setTtsMessage("正在播放测试语音...");
+    setTtsMessage("正在试听语音...");
     try {
       await updateSettings({ addons: { ...settings.addons, tts: { ...settings.addons.tts, enabled: true } } });
       const result = await window.companionAPI.speakText("哥哥，1.4 的语音附加件已经接上啦。");
@@ -1334,7 +1596,7 @@ function AdminWindow() {
         void playTtsAudioUrl(result.audioUrl, settings.addons.tts.volume);
         setTtsMessage("TTS 音频已返回并播放。");
       } else {
-        setTtsMessage(result.ok ? "测试语音已发送。" : result.message ?? "语音没有播放。");
+        setTtsMessage(result.ok ? "试听语音已发送。" : result.message ?? "语音没有播放。");
       }
     } catch (error) {
       setTtsMessage(error instanceof Error ? error.message : String(error));
@@ -1609,8 +1871,8 @@ function AdminWindow() {
           ))}
         </nav>
         <div className="admin-side-note">
-          <strong>设计原则</strong>
-          <p>左侧负责功能分区，顶部放全局动作，中间处理配置，右侧展示运行状态和高频控制。</p>
+          <strong>当前状态</strong>
+          <p>{healthStatus === "ok" ? "系统运行正常。" : healthStatus === "error" ? "存在需要处理的问题。" : "建议运行健康检查。"}</p>
         </div>
       </aside>
 
@@ -1623,7 +1885,7 @@ function AdminWindow() {
           <div className="admin-actions">
             <button onClick={refreshRuntimeState}>刷新数据</button>
             <button onClick={refreshSystemHealth}>运行健康检查</button>
-            <button onClick={testModelFromHealth}>测试模型</button>
+            <button onClick={testModelFromHealth}>验证连接</button>
             <button className="primary" onClick={saveAllSettings}>保存全部设置</button>
           </div>
         </header>
@@ -1640,13 +1902,13 @@ function AdminWindow() {
               </div>
               <div>
                 <div className="status-row">
-                  <span className="status-pill ok">素材完整</span>
+                  <span className={`status-pill ${healthStatus === "error" ? "warn" : "ok"}`}>{systemHealth ? healthLabel(systemHealth.status) : "等待检查"}</span>
                   <span className="status-pill ok">本地回复可用</span>
                   <span className={`status-pill ${settings.model.enabled ? "ok" : "warn"}`}>{settings.model.enabled ? "模型已启用" : "模型未启用"}</span>
                   <span className="status-pill">当前服装：{currentCostumeName}</span>
                 </div>
-                <h3>功能优先的后台布局</h3>
-                <p className="hint">这里已经按预览页结构连接到真实后台：全局刷新、健康检查、模型测试、桌宠大小、桌面行为、日记记忆和系统维护都会调用现有接口。</p>
+                <h3>今日陪伴状态</h3>
+                <p className="hint">当前形象为 {currentCostumeName}，心情为 {moodLabels[settings.selectedMood]}。{settings.companionMode ? "陪伴模式已开启" : "陪伴模式未开启"}，{settings.workMode ? "工作模式已开启。" : "工作模式未开启。"}</p>
               </div>
             </div>
             <div className="overview-grid">
@@ -1668,7 +1930,7 @@ function AdminWindow() {
               <article>
                 <strong>模型接口</strong>
                 <span>{settings.model.enabled ? providerLabels[settings.model.provider] : "当前使用本地回复"}</span>
-                <p>API Key {secretStatus?.hasApiKey ? "已填写" : "未填写"}，接口测试可在模型页或健康检查页执行。</p>
+                <p>API Key {secretStatus?.hasApiKey ? "已填写" : "未填写"}，连接状态可在模型页或健康检查页验证。</p>
               </article>
               <article>
                 <strong>稳定性底座</strong>
@@ -1680,6 +1942,11 @@ function AdminWindow() {
                 <span>清除记录 / 恢复出厂</span>
                 <p>可在系统设置中清空历史记录，或恢复默认设置和空密钥状态。</p>
               </article>
+              <article>
+                <strong>最近互动</strong>
+                <span>{settings.saveConversations ? `${recentConversations.length} 条记录` : "未保存对话"}</span>
+                <p>{recentConversations[0] ? `${replySourceLabels[recentConversations[0].source]} · ${moodLabels[recentConversations[0].mood]}` : "暂无可显示的最近互动。"}</p>
+              </article>
             </div>
             <div className="background-story">
               <div>
@@ -1689,16 +1956,16 @@ function AdminWindow() {
                 {BACKGROUND_STORY.map((paragraph) => <p key={paragraph}>{paragraph}</p>)}
               </div>
             </div>
-            <h3>规划功能落地清单</h3>
+            <h3>功能状态</h3>
             <div className="feature-list">
               <div><strong>自由聊天入口</strong><span>已实现</span><p>桌宠窗口支持输入、发送、历史上下文和本地回退。</p></div>
               <div><strong>主动冒泡</strong><span>已实现</span><p>待机超过阈值后，从主动冒泡文案池随机显示陪伴话语。</p></div>
               <div><strong>定时提醒</strong><span>已实现</span><p>喝水、休息、护眼、坐姿、长时间无互动等提醒可单独开关和调整间隔。</p></div>
-              <div><strong>日记本关键点</strong><span>已实现</span><p>支持手动记录、聊天关键词触发、模型摘要预留和往期检索。</p></div>
-              <div><strong>模型接口</strong><span>已实现</span><p>支持粘贴链接、标准端点转换、API Key 本地密钥文件和连接测试。</p></div>
+              <div><strong>日记本关键点</strong><span>已实现</span><p>支持手动记录、聊天关键词触发、模型摘要和往期检索。</p></div>
+              <div><strong>模型接口</strong><span>已实现</span><p>支持粘贴链接、标准端点转换、API Key 本地密钥文件和连接验证。</p></div>
               <div><strong>健康检查</strong><span>已实现</span><p>检查数据、素材、回复库、提醒、日记本、模型配置和运行环境。</p></div>
               <div><strong>便携打包</strong><span>已实现</span><p>数据、日志、素材和人格文档会随 Elf Sister 文件夹迁移。</p></div>
-              <div><strong>Live2D / GIF 扩展</strong><span>接口预留</span><p>后台已有选择入口，实际渲染引擎可在后续接入。</p></div>
+              <div><strong>静态立绘矩阵</strong><span>{assets.costumes.length} 套服装</span><p>当前使用静态 PNG，按服装和心情自动切换。</p></div>
             </div>
           </div>
         )}
@@ -1710,7 +1977,7 @@ function AdminWindow() {
               <button onClick={refreshPersona}><RefreshCw size={16} />刷新身份文档</button>
               <button className="primary" onClick={savePersona}>保存人格</button>
               <button className="danger" onClick={resetPersona}><RotateCcw size={16} />重置人格</button>
-              <button onClick={() => window.companionAPI.sendMessage("你好妹妹").then(setTestReply)}><Play size={16} />测试问候</button>
+              <button onClick={() => window.companionAPI.sendMessage("你好妹妹").then(setTestReply)}><Play size={16} />试发问候</button>
             </div>
             <div className="identity-editor">
               <Field label="角色名称">
@@ -1999,7 +2266,7 @@ function AdminWindow() {
                 <input type="number" min="500" max="10000" step="100" value={settings.addons.tts.minIntervalMs} onChange={(e) => updateTtsAddon({ minIntervalMs: Number(e.target.value) })} />
               </Field>
               <div className="toolbar">
-                <button onClick={testTts}><Play size={16} />测试朗读</button>
+                <button onClick={testTts}><Play size={16} />试听语音</button>
                 <button onClick={stopTts}><Square size={16} />停止</button>
               </div>
               {ttsMessage && <div className="reply-preview">{ttsMessage}</div>}
@@ -2215,7 +2482,7 @@ function AdminWindow() {
                 <p>{systemHealth ? `检查时间：${new Date(systemHealth.checkedAt).toLocaleString()}` : "点击刷新检查当前项目状态"}</p>
               </div>
               <button onClick={refreshSystemHealth}><RefreshCw size={16} />刷新检查</button>
-              <button onClick={testModelFromHealth}>测试模型</button>
+              <button onClick={testModelFromHealth}>验证连接</button>
             </div>
             {healthModelTest && (
               <div className="reply-preview">
@@ -2373,8 +2640,8 @@ function AdminWindow() {
               <input value={testInput} onChange={(e) => setTestInput(e.target.value)} />
               <button onClick={saveApiKey}>保存 Key</button>
               <button onClick={applyModelUrl}>应用链接</button>
-              <button onClick={sendModelTest}>测试回复</button>
-              <button onClick={() => window.companionAPI.testModelConnection().then(setTestReply)}>连接测试</button>
+              <button onClick={sendModelTest}>试发消息</button>
+              <button onClick={() => window.companionAPI.testModelConnection().then(setTestReply)}>验证连接</button>
             </div>
             <div className="toolbar">
               {modelPresets.map((preset) => (

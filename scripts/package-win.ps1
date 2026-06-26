@@ -3,7 +3,7 @@ $ErrorActionPreference = "Stop"
 $releaseDir = Join-Path $PSScriptRoot "..\release"
 $sourceDir = Join-Path $releaseDir "win-unpacked"
 $targetDir = Join-Path $releaseDir "Elf Sister"
-$version = "26.06.24.1.7"
+$version = "26.06.24.1.8"
 $versionDir = Join-Path $releaseDir $version
 $versionTargetDir = Join-Path $versionDir "Elf Sister"
 $sourceExe = Join-Path $sourceDir "electron.exe"
@@ -30,7 +30,7 @@ $utf8NoBom = New-Object System.Text.UTF8Encoding($false)
 [System.IO.File]::WriteAllText((Join-Path $dataDir "model-context.json"), "[]`n", $utf8NoBom)
 [System.IO.File]::WriteAllText((Join-Path $dataDir "model-secrets.json"), "{ `"apiKey`": `"`", `"visionApiKey`": `"`" }`n", $utf8NoBom)
 [System.IO.File]::WriteAllText((Join-Path $logsDir "app-events.jsonl"), "", $utf8NoBom)
-[System.IO.File]::WriteAllText((Join-Path $targetDir "VERSION.txt"), "26.06.24.1.7`n", $utf8NoBom)
+[System.IO.File]::WriteAllText((Join-Path $targetDir "VERSION.txt"), "$version`n", $utf8NoBom)
 
 if (!(Test-Path (Join-Path $targetDir "Elf Sister.exe"))) {
   throw "Elf Sister.exe was not created."
