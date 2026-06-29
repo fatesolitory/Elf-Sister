@@ -80,10 +80,14 @@ function shouldUseExpandedBubble(text: string) {
 
 function inferCollapseKind(text: string, fallback: BubbleCollapseKind = "dots"): BubbleCollapseKind {
   if (fallback !== "dots") return fallback;
-  if (/[!！]|注意|警告|危险|严重|重要|必须|立刻|马上|失败|错误|异常|报错|崩溃|无法|不能|生气|气死|烦死|焦虑|崩溃|难受|疼|发烧|不舒服|休息|喝水|护眼|坐姿|保存/.test(text)) {
+  const hasQuestionIntent = /[?？]|\bwhy\b|\bwhat\b|\bhow\b|为什么|怎么|怎样|什么|哪里|哪儿|哪个|哪种|多少/.test(text);
+  const hasClearInformationQuestion = /\bwhy\b|\bwhat\b|\bhow\b|为什么|怎么|怎样|什么|哪里|哪儿|哪个|哪种|多少/.test(text);
+  const hasHardReminderIntent = /[!！]|注意|警告|危险|严重|重要|必须|立刻|马上|失败|错误|异常|报错|崩溃|无法|不能/.test(text);
+  const hasSoftReminderIntent = /生气|气死|烦死|焦虑|难受|疼|发烧|不舒服|休息|喝水|护眼|坐姿|保存/.test(text);
+  if (hasHardReminderIntent || (hasSoftReminderIntent && !hasClearInformationQuestion)) {
     return "reminder";
   }
-  return /[?？]|\bwhy\b|\bwhat\b|\bhow\b|吗|呢|要不要|是不是|可以吗|好不好|对不对/.test(text) ? "question" : "dots";
+  return hasQuestionIntent ? "question" : "dots";
 }
 
 function getBubbleVisibleMs(text: string, mode: BubbleMode) {
@@ -182,14 +186,15 @@ function getContainRect(container: DOMRect, image: HTMLImageElement) {
   };
 }
 
-type HitRegion = { x: number; y: number; width: number; height: number };
+type HitRegion = { x: number; y: number; width: number; height: number; role?: "visual" | "control" };
 
-function rectToHitRegion(rect: DOMRect): HitRegion {
+function rectToHitRegion(rect: DOMRect, role: HitRegion["role"] = "visual"): HitRegion {
   return {
     x: Math.max(0, Math.floor(rect.left)),
     y: Math.max(0, Math.floor(rect.top)),
     width: Math.ceil(rect.width),
-    height: Math.ceil(rect.height)
+    height: Math.ceil(rect.height),
+    role
   };
 }
 
@@ -630,10 +635,14 @@ function CompanionWindow() {
           : bubbleModeRef.current === "collapsed"
             ? collapsedBubbleRef.current
             : null;
+      if (bubbleElement instanceof HTMLElement) {
+        const region = rectToHitRegion(bubbleElement.getBoundingClientRect(), "visual");
+        if (region.width > 0 && region.height > 0) regions.push(region);
+      }
       const controlElements = controlsCollapsed ? [controlsFoldRef.current] : [chatRef.current];
-      for (const element of [bubbleElement, ...controlElements]) {
+      for (const element of controlElements) {
         if (element instanceof HTMLElement) {
-          const region = rectToHitRegion(element.getBoundingClientRect());
+          const region = rectToHitRegion(element.getBoundingClientRect(), "control");
           if (region.width > 0 && region.height > 0) regions.push(region);
         }
       }

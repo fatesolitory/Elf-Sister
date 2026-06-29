@@ -9,7 +9,7 @@ declare global {
       saveSettings: (settings: AppSettings) => Promise<AppSettings>;
       setAlwaysOnTop: (enabled: boolean) => Promise<boolean>;
       setClickThrough: (enabled: boolean) => Promise<void>;
-      setHitRegions: (regions: Array<{ x: number; y: number; width: number; height: number }>) => Promise<void>;
+      setHitRegions: (regions: Array<{ x: number; y: number; width: number; height: number; role?: "visual" | "control" }>) => Promise<void>;
       showCompanionMenu: () => Promise<void>;
       toggleAlwaysOnTop: () => Promise<boolean>;
       showAdmin: () => Promise<void>;

@@ -78,6 +78,7 @@ const personaAdaptationHeading = "## 对话适配记录";
 let edgeSnapTimer: NodeJS.Timeout | null = null;
 let activeCostumeSceneId = "idle";
 let companionControlsCollapsed = true;
+let pendingDefaultCornerAlign = false;
 
 const defaultPersonaText = `# 桌面陪伴精灵妹妹人格设定
 
@@ -274,19 +275,38 @@ function setCompanionControlsCollapsed(collapsed: boolean) {
   return { ok: true, collapsed, width: nextSize.width, height: nextSize.height };
 }
 
-function applyCompanionHitRegions(regions: Electron.Rectangle[]) {
+type CompanionHitRegion = Electron.Rectangle & { role?: "visual" | "control" };
+
+function applyCompanionHitRegions(regions: CompanionHitRegion[]) {
   if (!companionWindow) return;
   const normalized = regions
     .map((region) => ({
       x: Math.max(0, Math.round(region.x)),
       y: Math.max(0, Math.round(region.y)),
       width: Math.max(1, Math.round(region.width)),
-      height: Math.max(1, Math.round(region.height))
+      height: Math.max(1, Math.round(region.height)),
+      role: region.role === "control" ? "control" : "visual"
     }))
     .filter((region) => region.width > 0 && region.height > 0);
-  companionHitRegionBounds = getRegionUnion(normalized);
+  const visualRegions = normalized.filter((region) => region.role === "visual");
+  companionHitRegionBounds = getRegionUnion(visualRegions.length > 0 ? visualRegions : normalized);
   companionWindow.setIgnoreMouseEvents(false);
-  companionWindow.setShape(normalized);
+  companionWindow.setShape(normalized.map(({ role: _role, ...region }) => region));
+  if (pendingDefaultCornerAlign && companionHitRegionBounds) {
+    pendingDefaultCornerAlign = false;
+    const bounds = companionWindow.getBounds();
+    const area = screen.getDisplayMatching({
+      x: bounds.x + companionHitRegionBounds.x,
+      y: bounds.y + companionHitRegionBounds.y,
+      width: companionHitRegionBounds.width,
+      height: companionHitRegionBounds.height
+    }).workArea;
+    companionWindow.setBounds({
+      ...bounds,
+      x: area.x + area.width - companionHitRegionBounds.x - companionHitRegionBounds.width,
+      y: area.y + area.height - companionHitRegionBounds.y - companionHitRegionBounds.height
+    }, false);
+  }
 }
 
 function snapCompanionToEdge() {
@@ -1254,6 +1274,8 @@ function applyChineseApplicationMenu() {
 function createCompanionWindow() {
   const settings = readSettings();
   const bounds = getDefaultCompanionWindowBounds(settings.scale);
+  companionHitRegionBounds = null;
+  pendingDefaultCornerAlign = true;
   companionWindow = new BrowserWindow({
     width: bounds.width,
     height: bounds.height,
@@ -2851,7 +2873,7 @@ ipcMain.handle("window:set-click-through", (_event, enabled: boolean) => {
   if (enabled) return;
   companionWindow?.setIgnoreMouseEvents(false);
 });
-ipcMain.handle("window:set-hit-regions", (_event, regions: Electron.Rectangle[]) => {
+ipcMain.handle("window:set-hit-regions", (_event, regions: CompanionHitRegion[]) => {
   applyCompanionHitRegions(Array.isArray(regions) ? regions : []);
 });
 ipcMain.handle("window:show-companion-menu", () => {

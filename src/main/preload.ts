@@ -13,7 +13,7 @@ contextBridge.exposeInMainWorld("companionAPI", {
   saveSettings: (settings: AppSettings): Promise<AppSettings> => ipcRenderer.invoke("settings:save", settings),
   setAlwaysOnTop: (enabled: boolean): Promise<boolean> => ipcRenderer.invoke("window:set-always-on-top", enabled),
   setClickThrough: (enabled: boolean): Promise<void> => ipcRenderer.invoke("window:set-click-through", enabled),
-  setHitRegions: (regions: Array<{ x: number; y: number; width: number; height: number }>): Promise<void> => ipcRenderer.invoke("window:set-hit-regions", regions),
+  setHitRegions: (regions: Array<{ x: number; y: number; width: number; height: number; role?: "visual" | "control" }>): Promise<void> => ipcRenderer.invoke("window:set-hit-regions", regions),
   showCompanionMenu: (): Promise<void> => ipcRenderer.invoke("window:show-companion-menu"),
   toggleAlwaysOnTop: (): Promise<boolean> => ipcRenderer.invoke("window:toggle-always-on-top"),
   showAdmin: (): Promise<void> => ipcRenderer.invoke("window:show-admin"),
